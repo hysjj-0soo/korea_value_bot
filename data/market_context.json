@@ -1,0 +1,88 @@
+{
+  "market_sentiment": "부정",
+  "fear_greed_score": 12,
+  "key_issues": [
+    {
+      "issue": "코스피 5100선 붕괴 및 전쟁 추경 불확실성",
+      "impact": "부정",
+      "sectors_affected": [
+        "전체시장",
+        "금융"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "전쟁 발발 한달간 시총 1000조원 증발",
+      "impact": "부정",
+      "sectors_affected": [
+        "IT/반도체",
+        "전체시장"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "고환율 지속 (USD/KRW 1531)",
+      "impact": "부정",
+      "sectors_affected": [
+        "IT/반도체",
+        "자동차",
+        "화학"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "알루미늄 관련주 부각 (소재 테마 수혜)",
+      "impact": "긍정",
+      "sectors_affected": [
+        "화학",
+        "소재"
+      ],
+      "duration": "단기"
+    },
+    {
+      "issue": "대한조선 1분기 연간 수주목표 달성",
+      "impact": "긍정",
+      "sectors_affected": [
+        "조선"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "삼천당제약 29.9% 급락 (재료소멸)",
+      "impact": "부정",
+      "sectors_affected": [
+        "바이오"
+      ],
+      "duration": "단기"
+    },
+    {
+      "issue": "외국인·기관 순매수 0원 (수급 공백)",
+      "impact": "부정",
+      "sectors_affected": [
+        "전체시장"
+      ],
+      "duration": "단기"
+    }
+  ],
+  "sector_momentum": {
+    "IT/반도체": -65,
+    "자동차": -40,
+    "금융": -30,
+    "바이오": -55,
+    "2차전지": -45,
+    "조선": 30,
+    "방산": 20,
+    "화학": -10
+  },
+  "market_summary": "전쟁 충격·시총 1000조 증발·환율 1531, 공포 극단화 국면",
+  "date": "2026.03.31",
+  "raw_data": {
+    "kospi_close": 5052.46,
+    "kospi_chg": -4.26,
+    "kosdaq_close": 1052.39,
+    "kosdaq_chg": -4.94,
+    "fx_rate": 1531.1,
+    "foreign_net": 0,
+    "inst_net": 0
+  }
+}
