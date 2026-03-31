@@ -142,7 +142,7 @@ tr.selected td{background:rgba(74,240,176,.05);}
 /* SECTOR */
 .sector-bar-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);}
 .sector-bar-row:last-child{border-bottom:none;}
-.sector-name-col{font-size:12px;color:var(--text2);min-width:100px;}
+.sector-name-col{font-size:12px;color:var(--text2);min-width:100px;font-weight:700;}
 .sector-bar-wrap{flex:1;height:6px;background:var(--bg3);border-radius:3px;position:relative;}
 .sector-bar-fill{height:6px;border-radius:3px;position:absolute;top:0;}
 .sector-score{font-family:var(--mono);font-size:11px;min-width:36px;text-align:right;}
@@ -246,7 +246,7 @@ tr.selected td{background:rgba(74,240,176,.05);}
       <div class="sum-row"><span class="sum-label">모니터링</span><span id="sum-total" style="font-family:var(--mono)">--종목</span></div>
       <div class="sum-row"><span class="sum-label">매수신호</span><span id="sum-buy"   class="up-c" style="font-family:var(--mono)">--개</span></div>
       <div class="sum-row"><span class="sum-label">보유</span>    <span id="sum-hold"  class="nt-c" style="font-family:var(--mono)">--개</span></div>
-      <div class="sum-row" style="margin-bottom:0"><span class="sum-label">관찰</span><span id="sum-watch" class="dn-c" style="font-family:var(--mono)">--개</span></div>
+      <div class="sum-row" style="margin-bottom:0"><span class="sum-label">관망</span><span id="sum-watch" class="dn-c" style="font-family:var(--mono)">--개</span></div>
     </div>
   </div>
 
@@ -274,7 +274,7 @@ tr.selected td{background:rgba(74,240,176,.05);}
                 <button class="filter-btn" onclick="applyFilter('kosdaq',this)">KOSDAQ</button>
                 <button class="filter-btn" onclick="applyFilter('buy',this)">매수</button>
                 <button class="filter-btn" onclick="applyFilter('hold',this)">보유</button>
-                <button class="filter-btn" onclick="applyFilter('watch',this)">관찰</button>
+                <button class="filter-btn" onclick="applyFilter('watch',this)">관망</button>
               </div>
             </div>
             <input class="search-box" type="text" placeholder="종목 검색..." oninput="searchTable(this.value)">
@@ -624,13 +624,13 @@ function renderTable(data) {
                : `<span class="rank-delta" style="color:var(--text3)">─</span>`;
     const mktCls = s.market==='KOSPI' ? 'mkt-kospi' : 'mkt-kosdaq';
     const sigCls = s.signal==='buy' ? 'sig-buy' : s.signal==='hold' ? 'sig-hold' : 'sig-watch';
-    const sigTxt = s.signal==='buy' ? '매수' : s.signal==='hold' ? '관찰' : '매도';
+    const sigTxt = s.signal==='buy' ? '매수' : s.signal==='hold' ? '보유' : '관망';
     const sc     = scoreColor(s.value_score);
     const selCls = selectedCode===s.code ? 'selected' : '';
     return `<tr class="${selCls}" onclick="openDetail('${s.code}')">
       <td><span class="rank-num">${s.rank}</span>${dStr}</td>
       <td class="name-cell">${s.name}</td>
-      <td class="mono-val">${s.price ? s.price.toLocaleString()+'원' : '-'}</td>
+      <td class="mono-val">${s.price ? s.price.toLocaleString() : '-'}</td>
       <td>${fmtP(s.change_rate)}</td>
       <td><span class="mkt-badge ${mktCls}">${s.market}</span></td>
       <td style="font-size:11px;color:var(--text2)">${s.sector}</td>
@@ -701,7 +701,7 @@ function openDetail(code) {
           <div class="detail-name">${s.name}</div>
           <div class="detail-code">${s.code} · ${s.market} · ${s.sector}</div>
         </div>
-        <span class="sig-badge ${s.signal==='buy'?'sig-buy':s.signal==='hold'?'sig-hold':'sig-watch'}">${s.signal==='buy'?'매수':s.signal==='hold'?'관찰':'매도'}</span>
+        <span class="sig-badge ${s.signal==='buy'?'sig-buy':s.signal==='hold'?'sig-hold':'sig-watch'}">${s.signal==='buy'?'매수':s.signal==='hold'?'보유':'관망'}</span>
       </div>
       <div class="detail-ret" style="color:${rc}">${s.change_rate>=0?'+':''}${(s.change_rate||0).toFixed(2)}%</div>
       <div class="detail-add">${s.price?s.price.toLocaleString()+'원':'-'} | 시총 ${fmtCap(s.market_cap)}</div>
@@ -823,7 +823,7 @@ function initMarket() {
   destroyChart('mktSignalChart');
   chartInstances['mktSignalChart'] = new Chart(document.getElementById('mktSignalChart'),{
     type:'doughnut',
-    data:{ labels:['매수(BUY)','관찰(HOLD)','매도(WATCH)'],
+    data:{ labels:['매수(BUY)','보유(HOLD)','관망(WATCH)'],
            datasets:[{ data:[buy,hold,watch],
              backgroundColor:['rgba(74,240,176,.7)','rgba(255,209,102,.7)','rgba(255,107,107,.7)'],
              borderColor:['#4af0b0','#ffd166','#ff6b6b'], borderWidth:1 }] },
@@ -925,17 +925,17 @@ function initSector() {
     const rows = top3.map(st => {
       const sc = scoreColor(st.value_score);
       const sigCls = st.signal==='buy'?'sig-buy':st.signal==='hold'?'sig-hold':'sig-watch';
-      const sigTxt = st.signal==='buy'?'매수':st.signal==='hold'?'관찰':'매도';
+      const sigTxt = st.signal==='buy'?'매수':st.signal==='hold'?'보유':'관망';
       return `<tr onclick="openDetail('${st.code}')">
         <td class="name-cell">${st.rank}. ${st.name}</td>
-        <td class="mono-val" style="font-size:11px">${st.price?st.price.toLocaleString()+'원':'-'}</td>
+        <td class="mono-val" style="font-size:11px">${st.price?st.price.toLocaleString():'-'}</td>
         <td>${fmtP(st.change_rate)}</td>
         <td><span class="mono-val" style="color:${sc}">${st.value_score}</span></td>
         <td><span class="sig-badge ${sigCls}">${sigTxt}</span></td>
       </tr>`;
     }).join('');
     return `<div style="margin-bottom:14px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden">
-      <div style="font-family:var(--mono);font-size:11px;color:var(--text2);padding:8px 12px;background:var(--bg3);border-bottom:1px solid var(--border)">${s.name}</div>
+      <div style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text);padding:8px 12px;background:var(--bg3);border-bottom:1px solid var(--border)">${s.name}</div>
       <table><thead><tr><th>종목명</th><th>현재가</th><th>등락</th><th>가치점수</th><th>신호</th></tr></thead><tbody>${rows}</tbody></table>
     </div>`;
   }).join('');
@@ -976,11 +976,11 @@ function initPortfolio() {
   document.getElementById('portBody').innerHTML = buyS.slice(0,30).map(s => {
     const sc  = scoreColor(s.value_score);
     const sigCls = s.signal==='buy'?'sig-buy':s.signal==='hold'?'sig-hold':'sig-watch';
-    const sigTxt = s.signal==='buy'?'매수':s.signal==='hold'?'관찰':'매도';
+    const sigTxt = s.signal==='buy'?'매수':s.signal==='hold'?'보유':'관망';
     return `<tr onclick="openDetail('${s.code}')">
       <td class="rank-num">${s.rank}</td>
       <td class="name-cell">${s.name}</td>
-      <td class="mono-val">${s.price?s.price.toLocaleString()+'원':'-'}</td>
+      <td class="mono-val">${s.price?s.price.toLocaleString():'-'}</td>
       <td>${fmtP(s.change_rate)}</td>
       <td style="font-size:11px;color:var(--text2)">${s.sector}</td>
       <td><span class="mono-val" style="color:${sc}">${s.value_score}</span></td>
