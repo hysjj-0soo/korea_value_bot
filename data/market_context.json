@@ -1,54 +1,44 @@
 {
-  "market_sentiment": "부정",
-  "fear_greed_score": 12,
+  "market_sentiment": "긍정",
+  "fear_greed_score": 68,
   "key_issues": [
     {
-      "issue": "코스피 5100선 붕괴 및 전쟁 추경 불확실성",
-      "impact": "부정",
-      "sectors_affected": [
-        "전체시장",
-        "금융"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "전쟁 발발 한달간 시총 1000조원 증발",
-      "impact": "부정",
-      "sectors_affected": [
-        "IT/반도체",
-        "전체시장"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "고환율 지속 (USD/KRW 1531)",
-      "impact": "부정",
-      "sectors_affected": [
-        "IT/반도체",
-        "자동차",
-        "화학"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "알루미늄 관련주 부각 (소재 테마 수혜)",
+      "issue": "WGBI 편입 효과로 외국인 사흘간 4.4조 순매수",
       "impact": "긍정",
       "sectors_affected": [
+        "금융",
+        "IT/반도체"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "고환율 지속(USD/KRW 1513.4)",
+      "impact": "부정",
+      "sectors_affected": [
+        "자동차",
         "화학",
-        "소재"
+        "2차전지"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "기아 역대 1분기 최대 판매량 경신",
+      "impact": "긍정",
+      "sectors_affected": [
+        "자동차"
       ],
       "duration": "단기"
     },
     {
-      "issue": "대한조선 1분기 연간 수주목표 달성",
+      "issue": "LG엔솔 1분기 실적 저점 후 반등 전망",
       "impact": "긍정",
       "sectors_affected": [
-        "조선"
+        "2차전지"
       ],
       "duration": "중기"
     },
     {
-      "issue": "삼천당제약 29.9% 급락 (재료소멸)",
+      "issue": "셀트리온 1분기 일회성 비용 실적 하회 우려",
       "impact": "부정",
       "sectors_affected": [
         "바이오"
@@ -56,32 +46,33 @@
       "duration": "단기"
     },
     {
-      "issue": "외국인·기관 순매수 0원 (수급 공백)",
-      "impact": "부정",
+      "issue": "한화시스템 목표가 상향(조선·방산 시너지)",
+      "impact": "긍정",
       "sectors_affected": [
-        "전체시장"
+        "조선",
+        "방산"
       ],
-      "duration": "단기"
+      "duration": "중기"
     }
   ],
   "sector_momentum": {
-    "IT/반도체": -65,
-    "자동차": -40,
-    "금융": -30,
-    "바이오": -55,
-    "2차전지": -45,
-    "조선": 30,
-    "방산": 20,
-    "화학": -10
+    "IT/반도체": 45,
+    "자동차": 65,
+    "금융": 60,
+    "바이오": 20,
+    "2차전지": 40,
+    "조선": 70,
+    "방산": 75,
+    "화학": 15
   },
-  "market_summary": "전쟁 충격·시총 1000조 증발·환율 1531, 공포 극단화 국면",
-  "date": "2026.03.31",
+  "market_summary": "WGBI 편입 외인 매수·방산·조선 강세로 코스피 5500 안착 시도",
+  "date": "2026.04.02",
   "raw_data": {
-    "kospi_close": 5052.46,
-    "kospi_chg": -4.26,
-    "kosdaq_close": 1052.39,
-    "kosdaq_chg": -4.94,
-    "fx_rate": 1531.1,
+    "kospi_close": 5532.66,
+    "kospi_chg": 0.98,
+    "kosdaq_close": 1121.55,
+    "kosdaq_chg": 0.48,
+    "fx_rate": 1513.4,
     "foreign_net": 0,
     "inst_net": 0
   }
