@@ -1,44 +1,29 @@
 {
-  "market_sentiment": "긍정",
-  "fear_greed_score": 68,
+  "market_sentiment": "부정",
+  "fear_greed_score": 8,
   "key_issues": [
     {
-      "issue": "WGBI 편입 효과로 외국인 사흘간 4.4조 순매수",
-      "impact": "긍정",
-      "sectors_affected": [
-        "금융",
-        "IT/반도체"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "고환율 지속(USD/KRW 1513.4)",
+      "issue": "트럼프 강경 발언 및 관세 리스크",
       "impact": "부정",
       "sectors_affected": [
+        "IT/반도체",
         "자동차",
-        "화학",
-        "2차전지"
+        "화학"
       ],
       "duration": "중기"
     },
     {
-      "issue": "기아 역대 1분기 최대 판매량 경신",
-      "impact": "긍정",
+      "issue": "코스피·코스닥 매도 사이드카 동시 발동",
+      "impact": "부정",
       "sectors_affected": [
-        "자동차"
+        "IT/반도체",
+        "2차전지",
+        "바이오"
       ],
       "duration": "단기"
     },
     {
-      "issue": "LG엔솔 1분기 실적 저점 후 반등 전망",
-      "impact": "긍정",
-      "sectors_affected": [
-        "2차전지"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "셀트리온 1분기 일회성 비용 실적 하회 우려",
+      "issue": "리가켐바이오 기술도입 계약 일부 해지",
       "impact": "부정",
       "sectors_affected": [
         "바이오"
@@ -46,33 +31,52 @@
       "duration": "단기"
     },
     {
-      "issue": "한화시스템 목표가 상향(조선·방산 시너지)",
+      "issue": "미국 메모리 ETF 출시(삼성전자·SK하이닉스 편입)",
       "impact": "긍정",
       "sectors_affected": [
-        "조선",
-        "방산"
+        "IT/반도체"
       ],
       "duration": "중기"
+    },
+    {
+      "issue": "원/달러 환율 1520원 고환율 지속",
+      "impact": "부정",
+      "sectors_affected": [
+        "금융",
+        "화학",
+        "2차전지"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "외국인·기관 순매수 0원(관망)",
+      "impact": "부정",
+      "sectors_affected": [
+        "IT/반도체",
+        "자동차",
+        "금융"
+      ],
+      "duration": "단기"
     }
   ],
   "sector_momentum": {
-    "IT/반도체": 45,
-    "자동차": 65,
-    "금융": 60,
-    "바이오": 20,
-    "2차전지": 40,
-    "조선": 70,
-    "방산": 75,
-    "화학": 15
+    "IT/반도체": -55,
+    "자동차": -50,
+    "금융": -30,
+    "바이오": -65,
+    "2차전지": -45,
+    "조선": -20,
+    "방산": 10,
+    "화학": -40
   },
-  "market_summary": "WGBI 편입 외인 매수·방산·조선 강세로 코스피 5500 안착 시도",
+  "market_summary": "트럼프 관세 충격에 코스피·코스닥 동반 사이드카, 극단적 공포 국면",
   "date": "2026.04.02",
   "raw_data": {
-    "kospi_close": 5532.66,
-    "kospi_chg": 0.98,
-    "kosdaq_close": 1121.55,
-    "kosdaq_chg": 0.48,
-    "fx_rate": 1513.4,
+    "kospi_close": 5233.79,
+    "kospi_chg": -4.47,
+    "kosdaq_close": 1055.47,
+    "kosdaq_chg": -5.44,
+    "fx_rate": 1520.0,
     "foreign_net": 0,
     "inst_net": 0
   }

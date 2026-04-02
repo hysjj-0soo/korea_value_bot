@@ -542,6 +542,8 @@ let allStocks=[], displayStocks=[];
 let currentFilter='all', currentSearch='';
 let sortKey='rank', sortAsc=true;
 let selectedCode=null;
+let liveMarketData=null;  // /api/market 최신 응답 캐시
+const chartModes={};      // code → 'day' | 'month3'
 const chartInstances={};
 const pageInited={};
 
@@ -571,7 +573,9 @@ function navTo(name, el) {
 //  모바일 기업정보 바텀시트
 // ═══════════════════════════════════════════════════════════════
 function openMobDetail(html) {
-  document.getElementById('mobDetailInner').innerHTML = html;
+  // 데스크탑 패널용 -a suffix를 모바일용 -m으로 교체하여 ID 충돌 방지
+  const mobHtml = html.replace(/-a"/g, '-m"');
+  document.getElementById('mobDetailInner').innerHTML = mobHtml;
   document.getElementById('mobDetailSheet').classList.add('show');
   document.body.style.overflow = 'hidden';
 }
@@ -670,6 +674,7 @@ async function loadAllData() {
 // ═══════════════════════════════════════════════════════════════
 function renderTopbar(raw) {
   if (!raw||raw.error) return;
+  liveMarketData = raw;   // 전역 캐시 업데이트
   const kc=Number(raw.kospi_chg||0), dc=Number(raw.kosdaq_chg||0);
   const toN = (n,d=2)=>Number(n||0).toLocaleString('ko-KR',{maximumFractionDigits:d});
   document.getElementById('chip-kospi').innerHTML  =
@@ -680,6 +685,20 @@ function renderTopbar(raw) {
   const now = new Date();
   const ts  = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
   document.getElementById('chip-updated').textContent = ts;
+  // 시장분석 페이지가 열려 있으면 실시간으로 KPI 갱신
+  refreshMarketKPI(raw);
+}
+
+// 시장분석 KPI 별도 갱신 (topbar 폴링 결과로 시장분석 페이지도 실시간 반영)
+function refreshMarketKPI(raw) {
+  const el = document.getElementById('m-kospi');
+  if (!el) return;   // 시장분석 페이지 DOM이 없으면 스킵
+  const kc=Number(raw.kospi_chg||0), dc=Number(raw.kosdaq_chg||0);
+  document.getElementById('m-kospi').innerHTML    = `<span class="${kc>=0?'up-c':'dn-c'}">${fmt(raw.kospi_close)}</span>`;
+  document.getElementById('m-kospi-chg').innerHTML = fmtP(kc);
+  document.getElementById('m-kosdaq').innerHTML   = `<span class="${dc>=0?'up-c':'dn-c'}">${fmt(raw.kosdaq_close)}</span>`;
+  document.getElementById('m-kosdaq-chg').innerHTML = fmtP(dc);
+  document.getElementById('m-fx').textContent     = fmt(raw.fx_rate);
 }
 
 async function fetchLiveMarket() {
@@ -794,8 +813,8 @@ function renderTable(data) {
     return `<tr class="${rowCls} ${selCls}" onclick="openDetail('${s.code}')">
       <td><span class="rank-num">${s.rank}</span>${dStr}</td>
       <td class="name-cell">${s.name}${newTag}${heldTag}</td>
-      <td class="mono-val">${s.price?s.price.toLocaleString():'-'}</td>
-      <td>${fmtKR(s.change_rate)}</td>
+      <td class="mono-val" data-price-code="${s.code}">${s.price?s.price.toLocaleString():'-'}</td>
+      <td data-chg-code="${s.code}">${fmtKR(s.change_rate)}</td>
       <td><span class="mkt-badge ${mktCls}">${s.market}</span></td>
       <td style="font-size:11px;color:var(--text2)">${s.sector}</td>
       <td class="mono-val" style="font-size:11px">${fmtCap(s.market_cap)}</td>
@@ -810,6 +829,42 @@ function renderTable(data) {
       <td><span class="sig-badge ${sigClass(s.signal)}">${sigText(s.signal)}</span></td>
     </tr>`;
   }).join('');
+  // KIS 실시간 가격 비동기 적용
+  fetchTablePrices(data);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  테이블 실시간 가격 (KIS API, 순차 병렬 fetch)
+// ═══════════════════════════════════════════════════════════════
+async function fetchTablePrices(stocks) {
+  const targets = stocks.slice(0, 40);   // 최대 40종목
+  // 병렬 fetch (serve.py가 30s 캐싱하므로 부하 최소화)
+  await Promise.allSettled(targets.map(async s => {
+    try {
+      const r = await fetch(`/api/stock-price/${s.code}?t=`+Date.now(),{cache:'no-store'});
+      if (!r.ok) return;
+      const d = await r.json();
+      if (d.error || !d.price) return;
+      // 테이블 현재가 셀 업데이트
+      document.querySelectorAll(`[data-price-code="${s.code}"]`).forEach(el => {
+        el.textContent = d.price.toLocaleString();
+        el.style.color = 'var(--accent)';
+        el.title = '실시간 (KIS)';
+      });
+      // 등락 셀 업데이트 (API가 change_rate 제공 시)
+      if (d.change_rate != null) {
+        document.querySelectorAll(`[data-chg-code="${s.code}"]`).forEach(el => {
+          el.innerHTML = fmtKR(d.change_rate);
+        });
+      }
+      // detail panel 가격 업데이트
+      document.querySelectorAll(`[data-live-price="${s.code}"]`).forEach(el => {
+        el.textContent = d.price.toLocaleString();
+        el.title = '실시간 (KIS)';
+        el.style.color = '#4af0b0';
+      });
+    } catch(_) {}
+  }));
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -845,6 +900,29 @@ function sortBy(key) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+//  차트 토글 (1일 선차트 ↔ 3개월 일봉차트)
+// ═══════════════════════════════════════════════════════════════
+function toggleChart(code) {
+  const cur = chartModes[code] || 'day';
+  chartModes[code] = cur === 'day' ? 'month3' : 'day';
+  const mode = chartModes[code];
+  const isDay = mode === 'day';
+  const src = isDay
+    ? `https://ssl.pstatic.net/imgfinance/chart/item/area/day/${code}.png`
+    : `https://ssl.pstatic.net/imgfinance/chart/item/area/month3/${code}.png`;
+  [`chart-img-${code}-a`, `chart-img-${code}-m`].forEach(id => {
+    const img = document.getElementById(id);
+    if (img) { img.src = src + '?t=' + Date.now(); img.alt = isDay ? '1일 선차트' : '3개월 일봉'; }
+  });
+  const lblHtml = isDay
+    ? '1일 선차트 · <span style="color:var(--accent)">클릭→3개월봉</span>'
+    : '3개월 일봉 · <span style="color:var(--accent)">클릭→1일차트</span>';
+  [`chart-lbl-${code}-a`, `chart-lbl-${code}-m`].forEach(id => {
+    const el = document.getElementById(id); if (el) el.innerHTML = lblHtml;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
 //  기업 상세 HTML 생성 (공통)
 // ═══════════════════════════════════════════════════════════════
 function buildDetailHTML(s) {
@@ -859,7 +937,13 @@ function buildDetailHTML(s) {
   rangePct=Math.max(0,Math.min(100,rangePct));
 
   const naverUrl = `https://finance.naver.com/item/main.naver?code=${s.code}`;
-  const chartUrl = `https://ssl.pstatic.net/imgfinance/chart/item/area/day/${s.code}.png`;
+  const initMode = chartModes[s.code] || 'day';
+  const initChartSrc = initMode === 'day'
+    ? `https://ssl.pstatic.net/imgfinance/chart/item/area/day/${s.code}.png`
+    : `https://ssl.pstatic.net/imgfinance/chart/item/area/month3/${s.code}.png`;
+  const initLbl = initMode === 'day'
+    ? '1일 선차트 · <span style="color:var(--accent)">클릭→3개월봉</span>'
+    : '3개월 일봉 · <span style="color:var(--accent)">클릭→1일차트</span>';
 
   return `
     <!-- 헤더 -->
@@ -881,13 +965,15 @@ function buildDetailHTML(s) {
       <div class="d-cap">시총 ${fmtCap(s.market_cap)} · 외인 ${s.foreign_own?s.foreign_own.toFixed(1)+'%':'-'}</div>
     </div>
 
-    <!-- 네이버 1일 선차트 -->
+    <!-- 차트 (클릭으로 1일 ↔ 3개월 전환, 이름 클릭은 네이버 이동) -->
     <div class="naver-chart-wrap">
-      <a href="${naverUrl}" target="_blank" rel="noopener" class="naver-chart-link" title="네이버 증권 바로가기">
-        <img src="${chartUrl}" alt="${s.name} 1일 차트" class="naver-chart-img"
-          onerror="this.parentElement.parentElement.innerHTML='<div class=chart-err-msg>차트를 불러올 수 없습니다</div>'">
-      </a>
-      <div class="chart-overlay-lbl">1일 · 네이버 증권 ↗</div>
+      <div onclick="toggleChart('${s.code}')" style="cursor:pointer;display:block;">
+        <img id="chart-img-${s.code}-a" src="${initChartSrc}"
+          alt="${initMode==='day'?'1일 선차트':'3개월 일봉'}" class="naver-chart-img"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="chart-err-msg" style="display:none">차트를 불러올 수 없습니다</div>
+      </div>
+      <div class="chart-overlay-lbl" id="chart-lbl-${s.code}-a">${initLbl}</div>
     </div>
 
     <!-- 52주 레인지 -->
@@ -1012,9 +1098,19 @@ function initHistory() {
 // ═══════════════════════════════════════════════════════════════
 //  시장분석
 // ═══════════════════════════════════════════════════════════════
+// 공포/탐욕 수치 → 해설 텍스트
+function fgInterpret(score) {
+  if (score >= 76) return { label:'극도의 탐욕', color:'#ff4d4d', text:`극도의 탐욕 구간 (${score}점) — 시장 과열 경계. 신규 매수보다 기존 보유 종목 점검이 우선입니다.` };
+  if (score >= 56) return { label:'탐욕',       color:'#ffa040', text:`탐욕 구간 (${score}점) — 매수세가 강하고 시장 전반 강세. 고평가 종목은 분할 익절 고려.` };
+  if (score >= 46) return { label:'중립',       color:'#ffd166', text:`중립 구간 (${score}점) — 매수·매도 균형. 개별 종목의 실적·이슈 중심으로 대응하세요.` };
+  if (score >= 26) return { label:'공포',       color:'#5599ff', text:`공포 구간 (${score}점) — 투자자 심리 위축. 우량 가치주 저가 분할 매수 기회를 탐색하세요.` };
+  return               { label:'극도의 공포',   color:'#3366ff', text:`극도의 공포 구간 (${score}점) — 패닉셀 발생 가능. 내재가치 대비 저평가된 우량주 선별 매수를 고려하세요.` };
+}
+
 function initMarket() {
-  const raw=D.meta.raw_market||D.ctx.raw_data||{};
-  const meta=D.meta,ctx=D.ctx;
+  // 실시간 데이터 우선, fallback: JSON
+  const raw = liveMarketData || D.meta.raw_market || D.ctx.raw_data || {};
+  const meta=D.meta, ctx=D.ctx;
   const kc=Number(raw.kospi_chg||0), dc=Number(raw.kosdaq_chg||0);
   const fg=meta.fear_greed_score??ctx.fear_greed_score??50;
   const sent=meta.market_sentiment||ctx.market_sentiment||'중립';
@@ -1023,13 +1119,20 @@ function initMarket() {
   document.getElementById('m-kosdaq').innerHTML   = `<span class="${dc>=0?'up-c':'dn-c'}">${fmt(raw.kosdaq_close)}</span>`;
   document.getElementById('m-kosdaq-chg').innerHTML = fmtP(dc);
   document.getElementById('m-fx').textContent     = fmt(raw.fx_rate);
-  document.getElementById('m-fg').textContent     = fg;
-  document.getElementById('m-sentiment').textContent = sent;
+
+  // 공포/탐욕 KPI + 바
+  const fgi = fgInterpret(fg);
+  document.getElementById('m-fg').innerHTML       = `<span style="color:${fgi.color}">${fg}</span>`;
+  document.getElementById('m-sentiment').innerHTML= `<span style="color:${fgi.color}">${fgi.label}</span>`;
   const fill=document.getElementById('fg-bar-fill');
   const pct=Math.min(Math.max(fg,0),100);
   fill.style.width=pct+'%';
-  fill.style.background=`hsl(${Math.round(pct*1.2)},80%,50%)`;
-  document.getElementById('market-summary-text').textContent=meta.market_summary||ctx.market_summary||'';
+  fill.style.background=fgi.color;
+  // 공포/탐욕 수치 기반 해설 + JSON 시장요약 결합
+  const jsonSummary = meta.market_summary||ctx.market_summary||'';
+  document.getElementById('market-summary-text').innerHTML =
+    `<div style="margin-bottom:8px;padding:8px 12px;border-left:3px solid ${fgi.color};background:rgba(255,255,255,.03);border-radius:0 4px 4px 0;font-family:var(--mono);font-size:12px;color:${fgi.color}">${fgi.text}</div>`
+    + (jsonSummary ? `<div style="font-size:13px;color:var(--text2);line-height:1.7">${jsonSummary}</div>` : '');
 
   const momentum=meta.sector_momentum||ctx.sector_momentum||{};
   const secL=Object.keys(momentum),secV=Object.values(momentum);
