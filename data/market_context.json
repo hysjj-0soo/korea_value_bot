@@ -1,0 +1,83 @@
+{
+  "market_sentiment": "부정",
+  "fear_greed_score": 8,
+  "key_issues": [
+    {
+      "issue": "트럼프 강경 발언 및 관세 리스크",
+      "impact": "부정",
+      "sectors_affected": [
+        "IT/반도체",
+        "자동차",
+        "화학"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "코스피·코스닥 매도 사이드카 동시 발동",
+      "impact": "부정",
+      "sectors_affected": [
+        "IT/반도체",
+        "2차전지",
+        "바이오"
+      ],
+      "duration": "단기"
+    },
+    {
+      "issue": "리가켐바이오 기술도입 계약 일부 해지",
+      "impact": "부정",
+      "sectors_affected": [
+        "바이오"
+      ],
+      "duration": "단기"
+    },
+    {
+      "issue": "미국 메모리 ETF 출시(삼성전자·SK하이닉스 편입)",
+      "impact": "긍정",
+      "sectors_affected": [
+        "IT/반도체"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "원/달러 환율 1520원 고환율 지속",
+      "impact": "부정",
+      "sectors_affected": [
+        "금융",
+        "화학",
+        "2차전지"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "외국인·기관 순매수 0원(관망)",
+      "impact": "부정",
+      "sectors_affected": [
+        "IT/반도체",
+        "자동차",
+        "금융"
+      ],
+      "duration": "단기"
+    }
+  ],
+  "sector_momentum": {
+    "IT/반도체": -55,
+    "자동차": -50,
+    "금융": -30,
+    "바이오": -65,
+    "2차전지": -45,
+    "조선": -20,
+    "방산": 10,
+    "화학": -40
+  },
+  "market_summary": "트럼프 관세 충격에 코스피·코스닥 동반 사이드카, 극단적 공포 국면",
+  "date": "2026.04.02",
+  "raw_data": {
+    "kospi_close": 5233.79,
+    "kospi_chg": -4.47,
+    "kosdaq_close": 1055.47,
+    "kosdaq_chg": -5.44,
+    "fx_rate": 1520.0,
+    "foreign_net": 0,
+    "inst_net": 0
+  }
+}
