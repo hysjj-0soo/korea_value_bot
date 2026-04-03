@@ -1,89 +1,82 @@
 {
-  "market_sentiment": "긍정",
-  "fear_greed_score": 62,
+  "market_sentiment": "부정",
+  "fear_greed_score": 8,
   "key_issues": [
     {
-      "issue": "호르무즈해협 통항 기대감에 따른 지정학적 리스크 완화",
-      "impact": "긍정",
-      "sectors_affected": [
-        "에너지",
-        "해운",
-        "조선"
-      ],
-      "duration": "단기"
-    },
-    {
-      "issue": "스페이스X 기업가치 상향 및 미래에셋벤처 수혜",
-      "impact": "긍정",
-      "sectors_affected": [
-        "금융",
-        "IT/반도체"
-      ],
-      "duration": "단기"
-    },
-    {
-      "issue": "한화솔루션 2.4조 대규모 증자 검토",
+      "issue": "트럼프 강경 발언 및 관세 리스크",
       "impact": "부정",
       "sectors_affected": [
+        "IT/반도체",
+        "자동차",
+        "화학"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "코스피·코스닥 매도 사이드카 동시 발동",
+      "impact": "부정",
+      "sectors_affected": [
+        "IT/반도체",
+        "2차전지",
+        "바이오"
+      ],
+      "duration": "단기"
+    },
+    {
+      "issue": "리가켐바이오 기술도입 계약 일부 해지",
+      "impact": "부정",
+      "sectors_affected": [
+        "바이오"
+      ],
+      "duration": "단기"
+    },
+    {
+      "issue": "미국 메모리 ETF 출시(삼성전자·SK하이닉스 편입)",
+      "impact": "긍정",
+      "sectors_affected": [
+        "IT/반도체"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "원/달러 환율 1520원 고환율 지속",
+      "impact": "부정",
+      "sectors_affected": [
+        "금융",
         "화학",
         "2차전지"
       ],
       "duration": "중기"
     },
     {
-      "issue": "AI 시대 광통신 섹터 주목",
-      "impact": "긍정",
-      "sectors_affected": [
-        "IT/반도체"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "신성이엔지 재생에너지 확대 및 주주환원 기대",
-      "impact": "긍정",
-      "sectors_affected": [
-        "화학",
-        "2차전지"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "코스맥스 중국 지역본부 인증 획득",
-      "impact": "긍정",
-      "sectors_affected": [
-        "바이오"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "고환율(1508원대) 지속",
+      "issue": "외국인·기관 순매수 0원(관망)",
       "impact": "부정",
       "sectors_affected": [
-        "금융",
-        "화학",
-        "바이오"
+        "IT/반도체",
+        "자동차",
+        "금융"
       ],
-      "duration": "중기"
+      "duration": "단기"
     }
   ],
   "sector_momentum": {
-    "IT/반도체": 55,
-    "자동차": 20,
-    "금융": 30,
-    "바이오": 35,
-    "2차전지": 25,
-    "조선": 40,
-    "방산": 30,
-    "화학": -10
+    "IT/반도체": -55,
+    "자동차": -50,
+    "금융": -30,
+    "바이오": -65,
+    "2차전지": -45,
+    "조선": -20,
+    "방산": 10,
+    "화학": -40
   },
-  "market_summary": "호르무즈 기대감·AI 광통신 수혜로 코스피 3% 반등, 고환율·한화솔루션 증자는 부담",
-  "date": "2026.04.03",
+  "market_summary": "트럼프 관세 충격에 코스피·코스닥 동반 사이드카, 극단적 공포 국면",
+  "date": "2026.04.02",
   "raw_data": {
-    "kospi_close": 5393.55,
-    "kospi_chg": 3.05,
-    "kosdaq_close": 1072.67,
-    "kosdaq_chg": 1.55,
-    "fx_rate": 1508.9,
+    "kospi_close": 5233.79,
+    "kospi_chg": -4.47,
+    "kosdaq_close": 1055.47,
+    "kosdaq_chg": -5.44,
+    "fx_rate": 1520.0,
     "foreign_net": 0,
     "inst_net": 0
   }

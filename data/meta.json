@@ -1,33 +1,33 @@
 {
-  "updated_at": "2026-04-03 10:49:06",
-  "date": "2026.04.03",
+  "updated_at": "2026-04-02 15:51:00",
+  "date": "2026.04.02",
   "total_stocks": 100,
   "top10": [
     {
       "rank": 1,
       "prev_rank": null,
-      "name": "하나금융지주",
-      "code": "086790",
-      "market": "KOSPI",
-      "sector": "금융",
-      "value_score": 74,
-      "signal": "buy",
-      "rank_change": 0,
-      "rank_change_reason": "",
-      "date": "2026.04.03"
-    },
-    {
-      "rank": 2,
-      "prev_rank": null,
       "name": "성우하이텍",
       "code": "015750",
       "market": "KOSPI",
       "sector": "자동차",
-      "value_score": 70,
+      "value_score": 72,
       "signal": "watch",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.03"
+      "date": "2026.04.02"
+    },
+    {
+      "rank": 2,
+      "prev_rank": null,
+      "name": "하나금융지주",
+      "code": "086790",
+      "market": "KOSPI",
+      "sector": "금융",
+      "value_score": 72,
+      "signal": "buy",
+      "rank_change": 0,
+      "rank_change_reason": "",
+      "date": "2026.04.02"
     },
     {
       "rank": 3,
@@ -40,20 +40,20 @@
       "signal": "watch",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.03"
+      "date": "2026.04.02"
     },
     {
       "rank": 4,
       "prev_rank": null,
-      "name": "현대모비스",
-      "code": "012330",
+      "name": "기아",
+      "code": "000270",
       "market": "KOSPI",
       "sector": "자동차",
       "value_score": 68,
-      "signal": "hold",
+      "signal": "watch",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.03"
+      "date": "2026.04.02"
     },
     {
       "rank": 5,
@@ -66,36 +66,62 @@
       "signal": "hold",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.03"
+      "date": "2026.04.02"
     },
     {
       "rank": 6,
       "prev_rank": null,
-      "name": "기아",
-      "code": "000270",
+      "name": "CJ대한통운",
+      "code": "000120",
+      "market": "KOSPI",
+      "sector": "항공/물류",
+      "value_score": 68,
+      "signal": "watch",
+      "rank_change": 0,
+      "rank_change_reason": "",
+      "date": "2026.04.02"
+    },
+    {
+      "rank": 7,
+      "prev_rank": null,
+      "name": "현대모비스",
+      "code": "012330",
       "market": "KOSPI",
       "sector": "자동차",
       "value_score": 65,
       "signal": "watch",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.03"
+      "date": "2026.04.02"
     },
     {
-      "rank": 7,
+      "rank": 8,
       "prev_rank": null,
-      "name": "GS",
-      "code": "078930",
+      "name": "KT",
+      "code": "030200",
       "market": "KOSPI",
-      "sector": "에너지",
+      "sector": "통신",
+      "value_score": 65,
+      "signal": "hold",
+      "rank_change": 0,
+      "rank_change_reason": "",
+      "date": "2026.04.02"
+    },
+    {
+      "rank": 9,
+      "prev_rank": null,
+      "name": "DL이앤씨",
+      "code": "375500",
+      "market": "KOSPI",
+      "sector": "건설",
       "value_score": 65,
       "signal": "watch",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.03"
+      "date": "2026.04.02"
     },
     {
-      "rank": 8,
+      "rank": 10,
       "prev_rank": null,
       "name": "대한항공",
       "code": "003490",
@@ -105,55 +131,29 @@
       "signal": "watch",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.03"
-    },
-    {
-      "rank": 9,
-      "prev_rank": null,
-      "name": "KB금융",
-      "code": "105560",
-      "market": "KOSPI",
-      "sector": "금융",
-      "value_score": 62,
-      "signal": "watch",
-      "rank_change": 0,
-      "rank_change_reason": "",
-      "date": "2026.04.03"
-    },
-    {
-      "rank": 10,
-      "prev_rank": null,
-      "name": "메리츠금융지주",
-      "code": "138040",
-      "market": "KOSPI",
-      "sector": "금융",
-      "value_score": 62,
-      "signal": "hold",
-      "rank_change": 0,
-      "rank_change_reason": "",
-      "date": "2026.04.03"
+      "date": "2026.04.02"
     }
   ],
-  "market_sentiment": "긍정",
-  "fear_greed_score": 62,
-  "market_summary": "호르무즈 기대감·AI 광통신 수혜로 코스피 3% 반등, 고환율·한화솔루션 증자는 부담",
+  "market_sentiment": "부정",
+  "fear_greed_score": 8,
+  "market_summary": "트럼프 관세 충격에 코스피·코스닥 동반 사이드카, 극단적 공포 국면",
   "raw_market": {
-    "kospi_close": 5393.55,
-    "kospi_chg": 3.05,
-    "kosdaq_close": 1072.67,
-    "kosdaq_chg": 1.55,
-    "fx_rate": 1508.9,
+    "kospi_close": 5233.79,
+    "kospi_chg": -4.47,
+    "kosdaq_close": 1055.47,
+    "kosdaq_chg": -5.44,
+    "fx_rate": 1520.0,
     "foreign_net": 0,
     "inst_net": 0
   },
   "sector_momentum": {
-    "IT/반도체": 55,
-    "자동차": 20,
-    "금융": 30,
-    "바이오": 35,
-    "2차전지": 25,
-    "조선": 40,
-    "방산": 30,
-    "화학": -10
+    "IT/반도체": -55,
+    "자동차": -50,
+    "금융": -30,
+    "바이오": -65,
+    "2차전지": -45,
+    "조선": -20,
+    "방산": 10,
+    "화학": -40
   }
 }
