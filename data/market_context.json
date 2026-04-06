@@ -1,37 +1,27 @@
 {
-  "market_sentiment": "긍정",
-  "fear_greed_score": 62,
+  "market_sentiment": "중립",
+  "fear_greed_score": 52,
   "key_issues": [
     {
-      "issue": "호르무즈해협 통항 기대감에 따른 지정학적 리스크 완화",
+      "issue": "풍산 탄약사업부 한화 매각 추진",
       "impact": "긍정",
       "sectors_affected": [
-        "에너지",
-        "해운",
-        "조선"
+        "방산"
       ],
       "duration": "단기"
     },
     {
-      "issue": "스페이스X 기업가치 상향 및 미래에셋벤처 수혜",
-      "impact": "긍정",
-      "sectors_affected": [
-        "금융",
-        "IT/반도체"
-      ],
-      "duration": "단기"
-    },
-    {
-      "issue": "한화솔루션 2.4조 대규모 증자 검토",
+      "issue": "고환율 지속(1511.7원)",
       "impact": "부정",
       "sectors_affected": [
+        "자동차",
         "화학",
-        "2차전지"
+        "바이오"
       ],
       "duration": "중기"
     },
     {
-      "issue": "AI 시대 광통신 섹터 주목",
+      "issue": "라온시큐어 일본 생체인증 MAU 1000만 돌파",
       "impact": "긍정",
       "sectors_affected": [
         "IT/반도체"
@@ -39,51 +29,58 @@
       "duration": "중기"
     },
     {
-      "issue": "신성이엔지 재생에너지 확대 및 주주환원 기대",
+      "issue": "한투운용 휴머노이드 로봇 ETF 출시",
       "impact": "긍정",
       "sectors_affected": [
-        "화학",
-        "2차전지"
+        "IT/반도체"
       ],
       "duration": "중기"
     },
     {
-      "issue": "코스맥스 중국 지역본부 인증 획득",
-      "impact": "긍정",
-      "sectors_affected": [
-        "바이오"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "고환율(1508원대) 지속",
+      "issue": "현대모비스 중동전쟁 원재료비 부담·목표가 하향",
       "impact": "부정",
       "sectors_affected": [
-        "금융",
-        "화학",
-        "바이오"
+        "자동차"
       ],
       "duration": "중기"
+    },
+    {
+      "issue": "외국인·기관 순매수 제로(관망세)",
+      "impact": "중립",
+      "sectors_affected": [
+        "IT/반도체",
+        "금융",
+        "자동차"
+      ],
+      "duration": "단기"
+    },
+    {
+      "issue": "에이아이코리아 암모니아 연소시스템 특허 등록",
+      "impact": "긍정",
+      "sectors_affected": [
+        "화학"
+      ],
+      "duration": "단기"
     }
   ],
   "sector_momentum": {
-    "IT/반도체": 55,
-    "자동차": 20,
-    "금융": 30,
-    "바이오": 35,
-    "2차전지": 25,
-    "조선": 40,
-    "방산": 30,
+    "IT/반도체": 30,
+    "자동차": -25,
+    "금융": 10,
+    "바이오": 5,
+    "2차전지": 0,
+    "조선": 10,
+    "방산": 65,
     "화학": -10
   },
-  "market_summary": "호르무즈 기대감·AI 광통신 수혜로 코스피 3% 반등, 고환율·한화솔루션 증자는 부담",
-  "date": "2026.04.03",
+  "market_summary": "코스피·코스닥 동반 상승, 방산 강세·고환율·수급 관망세 혼재",
+  "date": "2026.04.06",
   "raw_data": {
-    "kospi_close": 5393.55,
-    "kospi_chg": 3.05,
-    "kosdaq_close": 1072.67,
-    "kosdaq_chg": 1.55,
-    "fx_rate": 1508.9,
+    "kospi_close": 5478.51,
+    "kospi_chg": 1.88,
+    "kosdaq_close": 1074.48,
+    "kosdaq_chg": 1.01,
+    "fx_rate": 1511.7,
     "foreign_net": 0,
     "inst_net": 0
   }
