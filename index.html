@@ -401,15 +401,19 @@ tr.row-new td{background:rgba(74,240,176,.04);}
 
           <!-- 공포/탐욕 지수 (수치 좌측 배치) -->
           <div class="full-chart-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <div style="font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase">공포/탐욕 지수</div>
+              <span id="fg-update-badge" style="font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:3px">--</span>
+            </div>
             <div style="display:flex;align-items:flex-start;gap:20px;margin-bottom:12px">
               <div style="flex-shrink:0">
-                <div style="font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">공포/탐욕 지수</div>
                 <div style="display:flex;align-items:baseline;gap:8px">
                   <span class="fg-score-num" id="fg-score-num">--</span>
                   <span style="font-family:var(--mono);font-size:16px;font-weight:600" id="fg-label">--</span>
                 </div>
+                <div style="font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:4px" id="fg-base-info"></div>
               </div>
-              <div style="flex:1;padding-top:18px">
+              <div style="flex:1;padding-top:8px">
                 <div class="fg-bar-wrap" style="margin-bottom:6px">
                   <div class="fg-marker" id="fg-marker" style="left:50%"></div>
                 </div>
@@ -422,7 +426,10 @@ tr.row-new td{background:rgba(74,240,176,.04);}
           </div>
 
           <!-- 주요 이슈 (차트보다 위) -->
-          <div class="section-title" style="margin-bottom:10px">주요 이슈</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div class="section-title">주요 이슈</div>
+            <div style="font-family:var(--mono);font-size:9px;color:var(--text3)" id="issues-date-badge"></div>
+          </div>
           <div id="market-issues" style="margin-bottom:16px"></div>
 
           <!-- 차트 2개 -->
@@ -524,6 +531,7 @@ let currentFilter='all', currentSearch='';
 let sortKey='rank', sortAsc=true;
 let selectedCode=null;
 let liveMarketData=null;
+let baseFG=50;           // AI 분석 기준값 (1일 1회 갱신)
 const chartModes={};
 const chartInstances={};
 const pageInited={};
@@ -631,6 +639,8 @@ async function loadAllData() {
   D.ranking= Array.isArray(ranking)?ranking:[];
   D.changes= Array.isArray(changes)?changes:[];
   if(Array.isArray(scores)) scores.forEach(s=>{ D.scores[s.code]=s; });
+  // AI 기준 공포/탐욕 점수 캐싱
+  baseFG = D.meta.fear_greed_score ?? D.ctx.fear_greed_score ?? baseFG;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -652,6 +662,62 @@ function renderTopbar(raw) {
   refreshMarketKPI(raw);
 }
 
+// ═══════════════════════════════════════════════════════════════
+//  공포/탐욕 실시간 보정 (장중 시장 데이터 기반)
+// ═══════════════════════════════════════════════════════════════
+function isTradingHours() {
+  const now=new Date(), day=now.getDay();
+  if(day===0||day===6) return false;       // 주말
+  const t=now.getHours()*60+now.getMinutes();
+  return t>=9*60 && t<15*60+30;           // 09:00~15:30
+}
+
+/**
+ * baseFG(AI 기준) + 실시간 시장 데이터 보정
+ * 공식: KOSPI±5% → FG ±20pt / 외국인 순매수 ±3000억 → FG ±5pt
+ */
+function computeRTFG(raw) {
+  if(!raw||raw.error) return baseFG;
+  const kc=Number(raw.kospi_chg||0), dc=Number(raw.kosdaq_chg||0);
+  const fnet=Number(raw.foreign_net||0);
+  // 지수 변동 조정: 가중 평균 변동률 → FG 포인트
+  const mktAdj = Math.round((kc*0.65 + dc*0.35) * 4);
+  // 외국인 순매수 조정: 3000억 기준 ±5pt
+  const fnetAdj = fnet!==0 ? Math.max(-5, Math.min(5, Math.round(fnet/600))) : 0;
+  return Math.max(0, Math.min(100, baseFG + mktAdj + fnetAdj));
+}
+
+function updateFGDisplay(score, isTrade) {
+  const numEl=document.getElementById('fg-score-num');
+  const lblEl=document.getElementById('fg-label');
+  const marker=document.getElementById('fg-marker');
+  const badge=document.getElementById('fg-update-badge');
+  if(!numEl) return;
+  const fgi=fgInterpret(score);
+  numEl.textContent=score; numEl.style.color=fgi.color;
+  if(lblEl){ lblEl.textContent=fgi.label; lblEl.style.color=fgi.color; }
+  if(marker) marker.style.left=Math.min(Math.max(score,0),100)+'%';
+  if(badge){
+    badge.textContent=isTrade?'장중 실시간 보정 중':'AI 장마감 기준';
+    badge.style.background=isTrade?'rgba(74,240,176,.12)':'rgba(74,158,255,.12)';
+    badge.style.color=isTrade?'var(--accent)':'#4a9eff';
+    badge.style.border=isTrade?'1px solid rgba(74,240,176,.3)':'1px solid rgba(74,158,255,.3)';
+  }
+  // 요약 텍스트: 공포/탐욕 해설만 색상 업데이트 (JSON 요약은 initMarket에서 처리)
+  const sumEl=document.getElementById('market-summary-text');
+  if(sumEl&&sumEl.firstChild){
+    sumEl.firstChild.style.borderLeftColor=fgi.color;
+    sumEl.firstChild.style.color=fgi.color;
+    sumEl.firstChild.textContent=fgi.text;
+  } else if(sumEl&&!sumEl.firstChild) {
+    // initMarket 이전 첫 렌더 시
+    const jsonSummary=D.meta.market_summary||D.ctx.market_summary||'';
+    sumEl.innerHTML=
+      `<div style="margin-bottom:6px;padding:8px 12px;border-left:3px solid ${fgi.color};background:rgba(255,255,255,.03);border-radius:0 4px 4px 0;font-family:var(--mono);font-size:12px;color:${fgi.color}">${fgi.text}</div>`
+      +(jsonSummary?`<div style="font-size:12px;color:var(--text2);line-height:1.7;margin-top:6px">${jsonSummary}</div>`:'');
+  }
+}
+
 function refreshMarketKPI(raw) {
   const el=document.getElementById('m-kospi');
   if(!el) return;
@@ -661,6 +727,10 @@ function refreshMarketKPI(raw) {
   document.getElementById('m-kosdaq').innerHTML =`<span class="${dc>=0?'kr-up':'kr-dn'}">${fmt(raw.kosdaq_close)}</span>`;
   document.getElementById('m-kosdaq-chg').innerHTML=fmtKR(dc);
   document.getElementById('m-fx').textContent   =fmt(raw.fx_rate,1);
+  // 공포/탐욕 실시간 업데이트
+  const trading=isTradingHours();
+  const rtFG = trading ? computeRTFG(raw) : baseFG;
+  updateFGDisplay(rtFG, trading);
 }
 
 async function fetchLiveMarket() {
@@ -1087,28 +1157,27 @@ function fgInterpret(score) {
 function initMarket() {
   const raw=liveMarketData||D.meta.raw_market||D.ctx.raw_data||{};
   const meta=D.meta, ctx=D.ctx;
-  const kc=Number(raw.kospi_chg||0), dc=Number(raw.kosdaq_chg||0);
-  const fg=meta.fear_greed_score??ctx.fear_greed_score??50;
 
-  // KPI (실시간)
+  // 1) KPI (실시간 10초 폴링)
   refreshMarketKPI(raw);
 
-  // 공포/탐욕
-  const fgi=fgInterpret(fg);
-  const numEl=document.getElementById('fg-score-num');
-  const lblEl=document.getElementById('fg-label');
-  if(numEl){ numEl.textContent=fg; numEl.style.color=fgi.color; }
-  if(lblEl){ lblEl.textContent=fgi.label; lblEl.style.color=fgi.color; }
-  const marker=document.getElementById('fg-marker');
-  if(marker) marker.style.left=Math.min(Math.max(fg,0),100)+'%';
+  // 2) AI 기준 날짜 표시
+  const aiDate=ctx.date||meta.date||'';
+  const baseInfoEl=document.getElementById('fg-base-info');
+  if(baseInfoEl) baseInfoEl.textContent=aiDate?`AI기준: ${aiDate} 15:35 장마감 후`:'';
 
-  const summaryEl=document.getElementById('market-summary-text');
-  const jsonSummary=meta.market_summary||ctx.market_summary||'';
-  if(summaryEl) summaryEl.innerHTML=
-    `<div style="margin-bottom:6px;padding:8px 12px;border-left:3px solid ${fgi.color};background:rgba(255,255,255,.03);border-radius:0 4px 4px 0;font-family:var(--mono);font-size:12px;color:${fgi.color}">${fgi.text}</div>`
-    +(jsonSummary?`<div style="font-size:12px;color:var(--text2);line-height:1.7;margin-top:6px">${jsonSummary}</div>`:'');
+  // 주요 이슈 기준일 배지
+  const issueDateEl=document.getElementById('issues-date-badge');
+  if(issueDateEl) issueDateEl.textContent=aiDate?`AI 분석 기준: ${aiDate} 15:35`:'';
 
-  // 주요 이슈
+  // 3) 공포/탐욕 초기 렌더 (refreshMarketKPI 에서 실시간 업데이트됨)
+  // → refreshMarketKPI 가 이미 호출됨. 페이지 첫 렌더만 여기서 처리
+  if(!(raw&&(raw.kospi_close||raw.kospi_chg))) {
+    // 실시간 데이터 없을 때 AI 기준값 표시
+    updateFGDisplay(baseFG, false);
+  }
+
+  // 4) 주요 이슈
   const issues=ctx.key_issues||[];
   const issEl=document.getElementById('market-issues');
   if(issEl) issEl.innerHTML=issues.map(iss=>{

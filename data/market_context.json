@@ -1,86 +1,83 @@
 {
-  "market_sentiment": "중립",
-  "fear_greed_score": 52,
+  "market_sentiment": "긍정",
+  "fear_greed_score": 68,
   "key_issues": [
     {
-      "issue": "풍산 탄약사업부 한화 매각 추진",
+      "issue": "미·이란 2주 휴전 합의",
       "impact": "긍정",
       "sectors_affected": [
-        "방산"
+        "IT/반도체",
+        "자동차",
+        "금융",
+        "2차전지"
       ],
       "duration": "단기"
     },
     {
-      "issue": "고환율 지속(1511.7원)",
+      "issue": "반도체주 급등 (삼성전자 21만·SK하이닉스 100만 회복)",
+      "impact": "긍정",
+      "sectors_affected": [
+        "IT/반도체"
+      ],
+      "duration": "단기"
+    },
+    {
+      "issue": "유가 하락 (석유·해운주 약세)",
       "impact": "부정",
       "sectors_affected": [
-        "자동차",
         "화학",
-        "바이오"
+        "조선"
       ],
-      "duration": "중기"
+      "duration": "단기"
     },
     {
-      "issue": "라온시큐어 일본 생체인증 MAU 1000만 돌파",
+      "issue": "LG전자 1분기 호실적",
       "impact": "긍정",
       "sectors_affected": [
-        "IT/반도체"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "한투운용 휴머노이드 로봇 ETF 출시",
-      "impact": "긍정",
-      "sectors_affected": [
-        "IT/반도체"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "현대모비스 중동전쟁 원재료비 부담·목표가 하향",
-      "impact": "부정",
-      "sectors_affected": [
+        "IT/반도체",
         "자동차"
       ],
       "duration": "중기"
     },
     {
-      "issue": "외국인·기관 순매수 제로(관망세)",
-      "impact": "중립",
+      "issue": "매수 사이드카 발동 (코스피·코스닥)",
+      "impact": "긍정",
       "sectors_affected": [
         "IT/반도체",
         "금융",
-        "자동차"
+        "2차전지"
       ],
       "duration": "단기"
     },
     {
-      "issue": "에이아이코리아 암모니아 연소시스템 특허 등록",
-      "impact": "긍정",
+      "issue": "고환율 지속 (USD/KRW 1477)",
+      "impact": "중립",
       "sectors_affected": [
+        "자동차",
+        "IT/반도체",
         "화학"
       ],
-      "duration": "단기"
+      "duration": "중기"
     }
   ],
   "sector_momentum": {
-    "IT/반도체": 30,
-    "자동차": -25,
-    "금융": 10,
-    "바이오": 5,
-    "2차전지": 0,
-    "조선": 10,
-    "방산": 65,
-    "화학": -10
+    "IT/반도체": 82,
+    "자동차": 45,
+    "금융": 38,
+    "바이오": 25,
+    "2차전지": 42,
+    "조선": -15,
+    "방산": -10,
+    "화학": -20
   },
-  "market_summary": "코스피·코스닥 동반 상승, 방산 강세·고환율·수급 관망세 혼재",
-  "date": "2026.04.06",
+  "market_summary": "미·이란 휴전 합의로 코스피 5800 회복, 반도체주 주도 급등·사이드카 발동",
+  "date": "2026.04.08",
   "raw_data": {
-    "kospi_close": 5478.51,
-    "kospi_chg": 1.88,
-    "kosdaq_close": 1074.48,
-    "kosdaq_chg": 1.01,
-    "fx_rate": 1511.7,
+    "kospi_close": 5824.15,
+    "kospi_chg": 5.99,
+    "kosdaq_close": 1084.57,
+    "kosdaq_chg": 4.61,
+    "fx_rate": 1477.4,
     "foreign_net": 0,
     "inst_net": 0
   }
