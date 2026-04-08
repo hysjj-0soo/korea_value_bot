@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-08 09:43:30",
+  "updated_at": "2026-04-08 11:01:00",
   "date": "2026.04.08",
   "total_stocks": 100,
   "top10": [
@@ -135,25 +135,25 @@
     }
   ],
   "market_sentiment": "긍정",
-  "fear_greed_score": 68,
-  "market_summary": "미·이란 휴전 합의로 코스피 5800 회복, 반도체주 주도 급등·사이드카 발동",
+  "fear_greed_score": 62,
+  "market_summary": "미·이란 휴전·위안화 절상에 코스피 5.67% 급등, 수급 공백은 불안 요소",
   "raw_market": {
-    "kospi_close": 5824.15,
-    "kospi_chg": 5.99,
-    "kosdaq_close": 1084.57,
-    "kosdaq_chg": 4.61,
-    "fx_rate": 1477.4,
+    "kospi_close": 5806.57,
+    "kospi_chg": 5.67,
+    "kosdaq_close": 1077.47,
+    "kosdaq_chg": 3.93,
+    "fx_rate": 1478.2,
     "foreign_net": 0,
     "inst_net": 0
   },
   "sector_momentum": {
-    "IT/반도체": 82,
+    "IT/반도체": 55,
     "자동차": 45,
-    "금융": 38,
-    "바이오": 25,
-    "2차전지": 42,
-    "조선": -15,
-    "방산": -10,
-    "화학": -20
+    "금융": 50,
+    "바이오": 30,
+    "2차전지": 40,
+    "조선": 35,
+    "방산": 25,
+    "화학": 20
   }
 }
