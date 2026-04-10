@@ -389,9 +389,19 @@ tr.row-new td{background:rgba(74,240,176,.04);}
             <div class="kpi"><div class="kpi-label">신규 진입</div><div class="kpi-val nt-c" id="h-new">--</div><div class="kpi-sub">신규 종목</div></div>
             <div class="kpi"><div class="kpi-label">변동 총계</div><div class="kpi-val" id="h-total">--</div><div class="kpi-sub">순위 변동</div></div>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-            <div class="section-title">순위 변동 타임라인</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--text3)" id="h-compare-info"></div>
+          <!-- 타임라인 네비게이션 -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px">
+            <div class="section-title" style="flex-shrink:0">순위 변동 타임라인</div>
+            <div style="display:flex;align-items:center;gap:6px;flex:1;justify-content:flex-end">
+              <button id="h-nav-prev" onclick="navigateHistory(1)"
+                style="background:var(--card);border:1px solid var(--border);color:var(--text2);font-size:12px;padding:3px 8px;border-radius:4px;cursor:pointer">◀ 이전</button>
+              <div style="text-align:center;min-width:160px">
+                <div style="font-family:var(--mono);font-size:11px;color:var(--text1);font-weight:600" id="h-timeline-date">--</div>
+                <div style="font-family:var(--mono);font-size:9px;color:var(--text3)" id="h-compare-info"></div>
+              </div>
+              <button id="h-nav-next" onclick="navigateHistory(-1)"
+                style="background:var(--card);border:1px solid var(--border);color:var(--text2);font-size:12px;padding:3px 8px;border-radius:4px;cursor:pointer">다음 ▶</button>
+            </div>
           </div>
           <div id="rankTimeline"><div class="loading-msg"><div class="spinner"></div></div></div>
         </div>
@@ -620,16 +630,27 @@ function mobSheetBgClick(e) {
 // ═══════════════════════════════════════════════════════════════
 //  순위 스냅샷 (localStorage) — 실질 순위변동 비교용
 // ═══════════════════════════════════════════════════════════════
-const RANK_SNAP_KEY='kvbot_rank_snapshot_v2';
+const RANK_HIST_KEY='kvbot_rank_history_v3';
 const PORT_KEY='kvbot_portfolio_v2';
+const RANK_HIST_MAX=30;  // 최대 보관 스냅샷 수
 
-function getRankSnapshot() {
-  try { return JSON.parse(localStorage.getItem(RANK_SNAP_KEY)||'null'); } catch { return null; }
+let historyIdx=0;  // 0=최신, 1=전전 등
+
+function getRankHistory() {
+  try { return JSON.parse(localStorage.getItem(RANK_HIST_KEY)||'[]'); } catch { return []; }
 }
-function saveRankSnapshot(date, stocks) {
-  const snap={date, ranks:{}};
+function appendRankSnapshot(date, ts, stocks) {
+  const hist=getRankHistory();
+  const snap={date, ts, ranks:{}};
   stocks.forEach(s=>{ snap.ranks[s.code]={rank:s.rank,name:s.name,value_score:s.value_score,signal:s.signal,sector:s.sector}; });
-  localStorage.setItem(RANK_SNAP_KEY, JSON.stringify(snap));
+  // 같은 날짜가 이미 있으면 마지막 항목 업데이트, 없으면 추가
+  if(hist.length>0 && hist[hist.length-1].date===date) {
+    hist[hist.length-1]=snap;
+  } else {
+    hist.push(snap);
+    if(hist.length>RANK_HIST_MAX) hist.shift();
+  }
+  localStorage.setItem(RANK_HIST_KEY, JSON.stringify(hist));
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -808,7 +829,8 @@ function getMerged() {
     const isNew=hasAnyPrev&&(r.prev_rank===null||r.prev_rank===undefined);
     const isHeld=portH[r.code]?.status==='hold';
     return {
-      rank:r.rank, rank_change:r.rank_change||0,
+      rank:r.rank, rank_change:r.rank_change||0, rank_change_reason:r.rank_change_reason||'',
+      prev_rank:r.prev_rank??null,
       name:r.name, code:r.code,
       market:(r.market||'').toUpperCase(), sector:r.sector||s.sector||'-',
       value_score:r.value_score||s.value_score||0,
@@ -1138,89 +1160,151 @@ function openDetail(code) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  순위변동 (localStorage 기반 실질 비교)
+//  순위변동 (서버 데이터 + localStorage 멀티스냅샷 히스토리)
 // ═══════════════════════════════════════════════════════════════
 function initHistory() {
-  const today=D.meta.date||'';
-  const snap=getRankSnapshot();
-  const changes=[];
-  let compareDate='';
+  historyIdx=0;
+  renderHistoryAt(0);
+}
 
-  if(snap&&snap.date&&snap.date!==today&&Object.keys(snap.ranks||{}).length>0) {
-    compareDate=snap.date;
-    const todayCodes=new Set(allStocks.map(s=>s.code));
-    const prevCodes =new Set(Object.keys(snap.ranks));
-
+function _computeHistoryChanges(idx) {
+  // idx=0 → 서버 D.ranking의 rank_change 필드 사용 (가장 정확)
+  if(idx===0) {
+    const today=D.meta.date||'';
+    const updatedAt=D.meta.updated_at||today;
+    // 전체가 prev_rank=null이면 첫 파이프라인 실행 → 변동 없음 처리
+    const allNew=allStocks.every(s=>s.prev_rank===null);
+    if(allNew) return {
+      changes:[], dateLabel:updatedAt,
+      compareInfo:'첫 갱신 — 다음 파이프라인 실행 후 순위 변동이 표시됩니다'
+    };
+    const changes=[];
     allStocks.forEach(s=>{
-      const prev=snap.ranks[s.code];
-      if(!prev) {
+      const rc=s.rank_change||0;
+      const rr=s.rank_change_reason||'';
+      if(rc!==0) {
+        changes.push({code:s.code,name:s.name,curr_rank:s.rank,prev_rank:s.prev_rank,
+          change:rc,score_change:0,type:'moved',
+          value_score:s.value_score,prev_score:s.value_score,
+          signal:s.signal,sector:s.sector,reason:rr});
+      } else if(s.prev_rank===null) {
+        // 일부만 신규진입 (정상적인 신규 종목)
         changes.push({code:s.code,name:s.name,curr_rank:s.rank,prev_rank:null,change:0,
           type:'new',value_score:s.value_score,signal:s.signal,sector:s.sector});
-      } else {
-        const rankChg =prev.rank-s.rank;   // 양수=순위 상승
-        const scoreChg=s.value_score-prev.value_score;
-        if(rankChg!==0||scoreChg!==0) {
-          changes.push({code:s.code,name:s.name,curr_rank:s.rank,prev_rank:prev.rank,
-            change:rankChg,score_change:scoreChg,type:'moved',
-            value_score:s.value_score,prev_score:prev.value_score,signal:s.signal,sector:s.sector});
-        }
-      }
-    });
-    prevCodes.forEach(code=>{
-      if(!todayCodes.has(code)) {
-        const p=snap.ranks[code];
-        changes.push({code,name:p.name,curr_rank:null,prev_rank:p.rank,change:-999,
-          type:'dropped',prev_score:p.value_score,signal:p.signal});
       }
     });
     changes.sort((a,b)=>Math.abs(b.change)-Math.abs(a.change));
-
-    // 오늘 스냅샷 업데이트
-    if(today&&allStocks.length>0) saveRankSnapshot(today,allStocks);
-
-  } else if(!snap&&today&&allStocks.length>0) {
-    // 최초 실행: 기준 스냅샷 저장
-    saveRankSnapshot(today,allStocks);
+    return {changes, dateLabel:updatedAt, compareInfo:`${today} 파이프라인 갱신`};
   }
 
+  // idx>=1 → localStorage 스냅샷 비교
+  const hist=getRankHistory();
+  // hist는 오래된 순 → 최신 순 배열
+  // idx=1: hist[n-2] vs hist[n-1] , idx=2: hist[n-3] vs hist[n-2] ...
+  const n=hist.length;
+  const currSnap=hist[n-1-idx+1]; // hist[n-idx]
+  const prevSnap=hist[n-1-idx];   // hist[n-idx-1]
+  if(!currSnap||!prevSnap) return {changes:[], dateLabel:'', compareInfo:''};
+
+  const changes=[];
+  const currCodes=new Set(Object.keys(currSnap.ranks));
+  const prevCodes=new Set(Object.keys(prevSnap.ranks));
+
+  currCodes.forEach(code=>{
+    const curr=currSnap.ranks[code];
+    const prev=prevSnap.ranks[code];
+    if(!prev) {
+      changes.push({code,name:curr.name,curr_rank:curr.rank,prev_rank:null,change:0,
+        type:'new',value_score:curr.value_score,signal:curr.signal,sector:curr.sector});
+    } else {
+      const rankChg=prev.rank-curr.rank;
+      const scoreChg=Math.round((curr.value_score-prev.value_score)*10)/10;
+      if(rankChg!==0||scoreChg!==0) {
+        changes.push({code,name:curr.name,curr_rank:curr.rank,prev_rank:prev.rank,
+          change:rankChg,score_change:scoreChg,type:'moved',
+          value_score:curr.value_score,prev_score:prev.value_score,
+          signal:curr.signal,sector:curr.sector});
+      }
+    }
+  });
+  prevCodes.forEach(code=>{
+    if(!currCodes.has(code)) {
+      const p=prevSnap.ranks[code];
+      changes.push({code,name:p.name,curr_rank:null,prev_rank:p.rank,change:-999,
+        type:'dropped',prev_score:p.value_score,signal:p.signal});
+    }
+  });
+  changes.sort((a,b)=>Math.abs(b.change)-Math.abs(a.change));
+
+  const fmtTs=ts=>{
+    if(!ts) return '';
+    const d=new Date(ts);
+    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  };
+  return {
+    changes,
+    dateLabel: fmtTs(currSnap.ts)||currSnap.date,
+    compareInfo: `${prevSnap.date} → ${currSnap.date}`
+  };
+}
+
+function renderHistoryAt(idx) {
+  const hist=getRankHistory();
+  const maxIdx=Math.max(0, hist.length-1); // idx=0은 서버데이터, idx=k는 hist[n-k]↔hist[n-k-1] 비교
+  historyIdx=Math.max(0,Math.min(idx,maxIdx));
+
+  // 네비게이션 버튼 상태
+  const prevBtn=document.getElementById('h-nav-prev');
+  const nextBtn=document.getElementById('h-nav-next');
+  if(prevBtn) prevBtn.disabled=historyIdx>=maxIdx;
+  if(nextBtn) nextBtn.disabled=historyIdx<=0;
+  if(prevBtn) prevBtn.style.opacity=historyIdx>=maxIdx?'0.3':'1';
+  if(nextBtn) nextBtn.style.opacity=historyIdx<=0?'0.3':'1';
+
+  const {changes, dateLabel, compareInfo}=_computeHistoryChanges(historyIdx);
+
+  // 날짜 표시
+  document.getElementById('h-timeline-date').textContent=dateLabel||'데이터 없음';
+  document.getElementById('h-compare-info').textContent=compareInfo||
+    (historyIdx===0?`${D.meta.date||''} 파이프라인 기준`:'');
+
   // KPI
-  const moved =changes.filter(c=>c.type==='moved'&&c.change>0);
-  const fallen =changes.filter(c=>c.type==='moved'&&c.change<0);
-  const newE  =changes.filter(c=>c.type==='new');
-  const topUp =moved.sort((a,b)=>b.change-a.change)[0];
-  const topDn =fallen.sort((a,b)=>a.change-b.change)[0];
+  const moved=changes.filter(c=>c.type==='moved');
+  const risen=moved.filter(c=>c.change>0).sort((a,b)=>b.change-a.change);
+  const fallen=moved.filter(c=>c.change<0).sort((a,b)=>a.change-b.change);
+  const newE=changes.filter(c=>c.type==='new');
+  const topUp=risen[0], topDn=fallen[0];
 
   document.getElementById('h-top-up').textContent   =topUp?.name||'-';
   document.getElementById('h-top-up-sub').innerHTML =topUp?`+${topUp.change}위 상승`:'-';
   document.getElementById('h-top-dn').textContent   =topDn?.name||'-';
-  document.getElementById('h-top-dn-sub').innerHTML =topDn?`${topDn.change}위 하락`:'-';
+  document.getElementById('h-top-dn-sub').innerHTML =topDn?`${Math.abs(topDn.change)}위 하락`:'-';
   document.getElementById('h-new').textContent  =newE.length;
-  document.getElementById('h-total').textContent=changes.length?changes.length+'건':'0건';
-  document.getElementById('h-compare-info').textContent=
-    compareDate?`비교 기준: ${compareDate} → ${today||'오늘'}`
-    :today?'최초 실행 — 다음 갱신 시 변동이 표시됩니다':'';
+  document.getElementById('h-total').textContent=moved.length?moved.length+'건':'0건';
 
   if(!changes.length) {
-    document.getElementById('rankTimeline').innerHTML=
-      `<div class="loading-msg">순위 변동 없음${compareDate?` (${compareDate} 기준)`:''}</div>`;
+    const msg=compareInfo||
+      (historyIdx===0?'순위 변동 없음 (오늘 갱신 기준)':'변동 데이터 없음 — 더 많은 데이터가 누적되면 표시됩니다');
+    document.getElementById('rankTimeline').innerHTML=`<div class="loading-msg">${msg}</div>`;
     return;
   }
 
+  const rowDate=historyIdx===0?(D.meta.date||''):(getRankHistory()[getRankHistory().length-historyIdx]?.date||'');
   document.getElementById('rankTimeline').innerHTML=changes.map(c=>{
     if(c.type==='new') return`<div class="timeline-item">
-      <div class="tl-date">${today}</div>
+      <div class="tl-date">${rowDate}</div>
       <div class="tl-event">
         <div class="tl-title"><span class="up-c">&#9733; 신규 진입</span> ${c.name} &rarr; ${c.curr_rank}위</div>
-        <div class="tl-detail">${c.sector} &middot; 가치점수 ${c.value_score}
+        <div class="tl-detail">${c.sector||''} &middot; 가치점수 ${c.value_score}
           <span class="tl-chip chip-up">${sigText(c.signal)}</span></div>
       </div>
     </div>`;
 
     if(c.type==='dropped') return`<div class="timeline-item">
-      <div class="tl-date">${today}</div>
+      <div class="tl-date">${rowDate}</div>
       <div class="tl-event">
         <div class="tl-title"><span class="dn-c">&#9660; 탈락</span> ${c.name} (${c.prev_rank}위 &rarr; 100위 이탈)</div>
-        <div class="tl-detail">이전 가치점수 ${c.prev_score}</div>
+        <div class="tl-detail">이전 가치점수 ${c.prev_score||'-'}</div>
       </div>
     </div>`;
 
@@ -1228,18 +1312,24 @@ function initHistory() {
     const sc=c.score_change>0?`<span class="up-c">+${c.score_change}</span>`
             :c.score_change<0?`<span class="dn-c">${c.score_change}</span>`
             :`<span style="color:var(--text3)">0</span>`;
+    const reasonHtml=c.reason?`<span style="color:var(--text3);margin-left:6px">· ${c.reason}</span>`:'';
     return`<div class="timeline-item">
-      <div class="tl-date">${today}</div>
+      <div class="tl-date">${rowDate}</div>
       <div class="tl-event">
         <div class="tl-title">
           <span class="${isUp?'up-c':'dn-c'}">${isUp?'▲':'▼'}${Math.abs(c.change)}위</span>
           ${c.name}
           <span style="color:var(--text3);font-size:11px">&nbsp;${c.prev_rank}&rarr;${c.curr_rank}위</span>
         </div>
-        <div class="tl-detail">${c.sector} &middot; 가치점수 ${c.prev_score}&rarr;${c.value_score} (${sc})</div>
+        <div class="tl-detail">${c.sector||''} &middot; 가치점수 ${c.prev_score}&rarr;${c.value_score} (${sc})${reasonHtml}</div>
       </div>
     </div>`;
   }).join('');
+}
+
+function navigateHistory(dir) {
+  // dir=1 이전(older), dir=-1 다음(newer)
+  renderHistoryAt(historyIdx+dir);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1733,6 +1823,9 @@ function showPage(name,el){
 async function init() {
   await loadAllData();
   allStocks=getMerged();
+  // 매 로드마다 스냅샷 누적 저장 (순위변동 히스토리용)
+  const today=D.meta.date||'';
+  if(today&&allStocks.length>0) appendRankSnapshot(today, Date.now(), allStocks);
   updatePortHistory(allStocks);
   updateSidebarSummary(allStocks);
   updateDisplay();

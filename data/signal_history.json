@@ -1,0 +1,344 @@
+{
+  "005930": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 47점 (60점 미만 관망)",
+      "value_score": 47.0
+    }
+  ],
+  "000660": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "watch",
+      "new_signal": "hold",
+      "reason": "가치점수 63점 (60~74점 HOLD 구간)",
+      "value_score": 63.0
+    }
+  ],
+  "042700": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 51점 (60점 미만 관망)",
+      "value_score": 51.0
+    }
+  ],
+  "039030": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "EXIT: 가치점수 43점 (50점 미만) / 목표주가 괴리율 -8% (마이너스 전환)",
+      "value_score": 43.0
+    }
+  ],
+  "240810": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "EXIT: 가치점수 43점 (50점 미만) / 목표주가 괴리율 -5% (마이너스 전환)",
+      "value_score": 43.0
+    }
+  ],
+  "403870": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "watch",
+      "new_signal": "hold",
+      "reason": "가치점수 69점 (60~74점 HOLD 구간)",
+      "value_score": 69.0
+    }
+  ],
+  "005380": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 58점 (60점 미만 관망)",
+      "value_score": 58.0
+    }
+  ],
+  "012330": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 42점 (60점 미만 관망)",
+      "value_score": 42.0
+    }
+  ],
+  "105560": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 51점 (60점 미만 관망)",
+      "value_score": 51.0
+    }
+  ],
+  "055550": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "buy",
+      "new_signal": "hold",
+      "reason": "BUY 편입 종목 HOLD 유지 (가치점수 50점, EXIT 미충족)",
+      "value_score": 50.0
+    }
+  ],
+  "000810": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 55점 (60점 미만 관망)",
+      "value_score": 55.0
+    }
+  ],
+  "071050": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 49점 (60점 미만 관망)",
+      "value_score": 49.0
+    }
+  ],
+  "207940": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 54점 (60점 미만 관망)",
+      "value_score": 54.0
+    }
+  ],
+  "185750": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 48점 (60점 미만 관망)",
+      "value_score": 48.0
+    }
+  ],
+  "145020": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 59점 (60점 미만 관망)",
+      "value_score": 59.0
+    }
+  ],
+  "079550": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 49점 (60점 미만 관망)",
+      "value_score": 49.0
+    }
+  ],
+  "047810": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 44점 (60점 미만 관망)",
+      "value_score": 44.0
+    }
+  ],
+  "010820": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "EXIT: 가치점수 35점 (50점 미만) / 목표주가 괴리율 -5% (마이너스 전환)",
+      "value_score": 35.0
+    }
+  ],
+  "009830": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "EXIT: 가치점수 24점 (50점 미만) / 재무 안정성 심각 악화",
+      "value_score": 24.0
+    }
+  ],
+  "011790": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "EXIT: 가치점수 27점 (50점 미만) / 재무 안정성 심각 악화",
+      "value_score": 27.0
+    }
+  ],
+  "298050": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "EXIT: 가치점수 31점 (50점 미만) / 재무 안정성 심각 악화",
+      "value_score": 31.0
+    }
+  ],
+  "282330": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 52점 (60점 미만 관망)",
+      "value_score": 52.0
+    }
+  ],
+  "139480": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "EXIT: 가치점수 34점 (50점 미만) / 업황 침체기 진입",
+      "value_score": 34.0
+    }
+  ],
+  "017670": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 42점 (60점 미만 관망)",
+      "value_score": 42.0
+    }
+  ],
+  "030200": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "buy",
+      "new_signal": "hold",
+      "reason": "BUY 편입 종목 HOLD 유지 (가치점수 46점, EXIT 미충족)",
+      "value_score": 46.0
+    }
+  ],
+  "032640": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 41점 (60점 미만 관망)",
+      "value_score": 41.0
+    }
+  ],
+  "028260": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "buy",
+      "new_signal": "hold",
+      "reason": "BUY 편입 종목 HOLD 유지 (가치점수 48점, EXIT 미충족)",
+      "value_score": 48.0
+    }
+  ],
+  "005490": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 44점 (60점 미만 관망)",
+      "value_score": 44.0
+    }
+  ],
+  "096770": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 29점 (60점 미만 관망)",
+      "value_score": 29.0
+    }
+  ],
+  "035720": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 37점 (60점 미만 관망)",
+      "value_score": 37.0
+    }
+  ],
+  "352820": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "EXIT: 가치점수 31점 (50점 미만) / 업황 침체기 진입",
+      "value_score": 31.0
+    }
+  ],
+  "259960": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "watch",
+      "new_signal": "hold",
+      "reason": "가치점수 60점 (60~74점 HOLD 구간)",
+      "value_score": 60.0
+    }
+  ],
+  "251270": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 47점 (60점 미만 관망)",
+      "value_score": 47.0
+    }
+  ],
+  "293490": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "EXIT: 가치점수 31점 (50점 미만) / 업황 침체기 진입",
+      "value_score": 31.0
+    }
+  ],
+  "041510": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "watch",
+      "new_signal": "hold",
+      "reason": "가치점수 60점 (60~74점 HOLD 구간)",
+      "value_score": 60.0
+    }
+  ],
+  "377300": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "EXIT: 가치점수 44점 (50점 미만) / 목표주가 괴리율 -8% (마이너스 전환)",
+      "value_score": 44.0
+    }
+  ],
+  "089590": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 30점 (60점 미만 관망)",
+      "value_score": 30.0
+    }
+  ],
+  "064290": [
+    {
+      "date": "2026.04.10",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "EXIT: 가치점수 20점 (50점 미만) / 재무 안정성 심각 악화",
+      "value_score": 20.0
+    }
+  ]
+}
