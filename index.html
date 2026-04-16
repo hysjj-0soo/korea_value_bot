@@ -236,6 +236,32 @@ tr.row-new td{background:rgba(74,240,176,.04);}
 .flash-up{animation:flashBgUp 1s ease-out;}
 .flash-dn{animation:flashBgDn 1s ease-out;}
 
+/* CANDLE CHART */
+.candle-chart-wrap{margin:10px 0;border:1px solid var(--border);border-radius:6px;overflow:hidden;background:#131720;position:relative;}
+.candle-period-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);}
+.candle-tab{padding:5px 12px;font-family:var(--mono);font-size:10px;color:var(--text3);cursor:pointer;border-right:1px solid var(--border);background:transparent;border-top:none;border-left:none;border-bottom:none;}
+.candle-tab:hover{color:var(--text2);}
+.candle-tab.active{color:#ffa040;background:rgba(255,160,64,.08);}
+.candle-ma-legend{display:flex;gap:10px;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.04);}
+.candle-ma-dot{display:inline-block;width:20px;height:2px;border-radius:1px;vertical-align:middle;margin-right:3px;}
+.candle-canvas-wrap{position:relative;height:160px;}
+.candle-vol-wrap{position:relative;height:40px;border-top:1px solid rgba(255,255,255,.04);}
+
+/* MARKET INDEX CHART */
+.mkt-idx-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.mkt-idx-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;}
+.mkt-idx-val{font-family:var(--mono);font-size:22px;font-weight:700;}
+.mkt-idx-chg{font-family:var(--mono);font-size:13px;font-weight:600;margin-left:6px;}
+.mkt-idx-chart-wrap{height:60px;margin-top:8px;position:relative;}
+
+/* SECTOR SCROLL */
+.sector-scroll-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.sector-stock-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.sector-stock-scroll table{min-width:340px;}
+.sector-stock-scroll th,.sector-stock-scroll td{white-space:nowrap;}
+th.col-name{min-width:90px;max-width:120px;}
+td.col-name{min-width:90px;max-width:120px;overflow:hidden;text-overflow:ellipsis;}
+
 /* MISC */
 .loading-msg{display:flex;align-items:center;justify-content:center;height:180px;color:var(--text3);font-family:var(--mono);font-size:12px;gap:10px;}
 .spinner{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
@@ -254,11 +280,12 @@ tr.row-new td{background:rgba(74,240,176,.04);}
   .mob-menu-btn{display:block;}
   .layout{grid-template-columns:1fr;}
   .sidebar{
-    display:block!important;position:fixed;top:45px;left:0;bottom:0;z-index:95;
-    height:auto;width:240px;transform:translateX(-100%);
-    box-shadow:4px 0 20px rgba(0,0,0,.5);
+    display:block!important;position:fixed;top:0;left:0;bottom:0;z-index:200;
+    height:100%;width:240px;transform:translateX(-100%);
+    box-shadow:4px 0 20px rgba(0,0,0,.5);padding-top:60px;
   }
   .sidebar.mob-open{transform:translateX(0);}
+  .sidebar-overlay{z-index:199;}
   .detail-panel{display:none;}
   .kpi-grid-3{grid-template-columns:repeat(3,1fr);}
   .kpi-grid-4{grid-template-columns:repeat(2,1fr);}
@@ -267,13 +294,22 @@ tr.row-new td{background:rgba(74,240,176,.04);}
   .topbar{padding:8px 14px;}
   .logo span{display:none;}
   .table-wrap{max-height:calc(100vh - 150px);}
+  .mkt-idx-grid{grid-template-columns:1fr 1fr;}
+  /* 모바일 상단바: 날짜+지수 한줄 */
+  .status-row{flex-wrap:nowrap;gap:6px;}
+  .topbar-chip-date{display:inline;font-family:var(--mono);font-size:10px;color:var(--text3);}
 }
 @media(max-width:540px){
-  .kpi-grid-3{grid-template-columns:1fr 1fr 1fr;}
+  .kpi-grid-3{grid-template-columns:1fr 1fr;}
   .kv-4{grid-template-columns:repeat(2,1fr);}
   .filter-row{gap:4px;}
   .filter-btn{padding:2px 7px;font-size:10px;}
   .search-box{width:100px;}
+  .mkt-idx-grid{grid-template-columns:1fr 1fr;}
+  .market-chip{padding:2px 5px;font-size:10px;}
+}
+@media(min-width:901px){
+  .topbar-chip-date{display:none;}
 }
 </style>
 </head>
@@ -315,9 +351,10 @@ tr.row-new td{background:rgba(74,240,176,.04);}
     <div class="logo">V100BOT <span>KRX 가치투자 100선</span></div>
   </div>
   <div class="status-row">
-    <div class="market-chip">KOSPI &nbsp;<span id="chip-kospi">--</span></div>
-    <div class="market-chip">KOSDAQ <span id="chip-kosdaq">--</span></div>
-    <span id="chip-updated" style="font-family:var(--mono);font-size:10px;color:var(--text3)"></span>
+    <!-- 데스크탑: 날짜+KOSPI+KOSDAQ / 모바일: KOSPI+KOSDAQ만 한줄 -->
+    <span id="chip-updated" class="topbar-chip-date" style="font-family:var(--mono);font-size:10px;color:var(--text3)"></span>
+    <div class="market-chip">KOSPI&nbsp;<span id="chip-kospi">--</span></div>
+    <div class="market-chip">KOSDAQ&nbsp;<span id="chip-kosdaq">--</span></div>
   </div>
 </div>
 
@@ -408,11 +445,24 @@ tr.row-new td{background:rgba(74,240,176,.04);}
 
         <!-- ── 시장분석 ── -->
         <div id="page-market" class="page">
-          <!-- 시장지표 3개 -->
-          <div class="kpi-grid kpi-grid-3">
-            <div class="kpi"><div class="kpi-label">KOSPI</div><div class="kpi-val" id="m-kospi">--</div><div class="kpi-sub" id="m-kospi-chg">--</div></div>
-            <div class="kpi"><div class="kpi-label">KOSDAQ</div><div class="kpi-val" id="m-kosdaq">--</div><div class="kpi-sub" id="m-kosdaq-chg">--</div></div>
-            <div class="kpi"><div class="kpi-label">USD/KRW</div><div class="kpi-val" id="m-fx">--</div><div class="kpi-sub">환율</div></div>
+          <!-- 지수 카드 + 인트라데이 선차트 -->
+          <div class="mkt-idx-grid">
+            <div class="mkt-idx-card">
+              <div style="font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.06em;margin-bottom:4px">KOSPI</div>
+              <div style="display:flex;align-items:baseline;gap:4px">
+                <span class="mkt-idx-val" id="m-kospi">--</span>
+                <span class="mkt-idx-chg" id="m-kospi-chg">--</span>
+              </div>
+              <div class="mkt-idx-chart-wrap"><canvas id="kospiLineChart"></canvas></div>
+            </div>
+            <div class="mkt-idx-card">
+              <div style="font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.06em;margin-bottom:4px">KOSDAQ</div>
+              <div style="display:flex;align-items:baseline;gap:4px">
+                <span class="mkt-idx-val" id="m-kosdaq">--</span>
+                <span class="mkt-idx-chg" id="m-kosdaq-chg">--</span>
+              </div>
+              <div class="mkt-idx-chart-wrap"><canvas id="kosdaqLineChart"></canvas></div>
+            </div>
           </div>
 
           <!-- 공포/탐욕 지수 (수치 좌측 배치) -->
@@ -458,7 +508,7 @@ tr.row-new td{background:rgba(74,240,176,.04);}
         <!-- ── 업종별현황 ── -->
         <div id="page-sector" class="page">
           <div class="section-title" style="margin-bottom:12px">업종별 모멘텀 &amp; 가치점수</div>
-          <div id="sectorBars"></div>
+          <div class="sector-scroll-wrap"><div id="sectorBars"></div></div>
           <div style="margin-top:20px;margin-bottom:10px" class="section-title">업종별 상위 종목</div>
           <div id="sectorStockTable"></div>
         </div>
@@ -730,9 +780,9 @@ function renderTopbar(raw) {
   document.getElementById('chip-kosdaq').innerHTML=
     `<span class="${dc>=0?'kr-up':'kr-dn'}">${toN(raw.kosdaq_close,2)} ${dc>=0?'▲':'▼'}${Math.abs(dc).toFixed(2)}%</span>`;
   const now=new Date();
+  // 데스크탑: 날짜+시각 / 모바일: CSS로 숨겨짐 (날짜 표시 불필요)
   document.getElementById('chip-updated').textContent=
-    `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} `+
-    `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+    `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
   refreshMarketKPI(raw);
 }
 
@@ -796,11 +846,11 @@ function refreshMarketKPI(raw) {
   const el=document.getElementById('m-kospi');
   if(!el) return;
   const kc=Number(raw.kospi_chg||0), dc=Number(raw.kosdaq_chg||0);
+  // 수치 카드
   document.getElementById('m-kospi').innerHTML  =`<span class="${kc>=0?'kr-up':'kr-dn'}">${fmt(raw.kospi_close)}</span>`;
-  document.getElementById('m-kospi-chg').innerHTML=fmtKR(kc);
+  document.getElementById('m-kospi-chg').innerHTML=`<span class="${kc>=0?'kr-up':'kr-dn'}">${kc>=0?'+':''}${kc.toFixed(2)}%</span>`;
   document.getElementById('m-kosdaq').innerHTML =`<span class="${dc>=0?'kr-up':'kr-dn'}">${fmt(raw.kosdaq_close)}</span>`;
-  document.getElementById('m-kosdaq-chg').innerHTML=fmtKR(dc);
-  document.getElementById('m-fx').textContent   =fmt(raw.fx_rate,1);
+  document.getElementById('m-kosdaq-chg').innerHTML=`<span class="${dc>=0?'kr-up':'kr-dn'}">${dc>=0?'+':''}${dc.toFixed(2)}%</span>`;
   // 공포/탐욕 실시간 업데이트
   const trading=isTradingHours();
   const rtFG = trading ? computeRTFG(raw) : baseFG;
@@ -1003,23 +1053,172 @@ function sortBy(key) {
 // ═══════════════════════════════════════════════════════════════
 //  차트 토글 (1일 선차트 ↔ 3개월 일봉)
 // ═══════════════════════════════════════════════════════════════
-function toggleChart(code) {
-  const cur=chartModes[code]||'day';
-  chartModes[code]=cur==='day'?'month3':'day';
-  const isDay=chartModes[code]==='day';
-  const src=isDay
-    ?`https://ssl.pstatic.net/imgfinance/chart/item/area/day/${code}.png`
-    :`https://ssl.pstatic.net/imgfinance/chart/item/area/month3/${code}.png`;
-  [`chart-img-${code}-a`,`chart-img-${code}-m`].forEach(id=>{
-    const img=document.getElementById(id);
-    if(img){ img.src=src+'?t='+Date.now(); img.alt=isDay?'1일 선차트':'3개월 일봉'; }
+//  캔들차트 (Canvas2D 직접 구현)
+// ═══════════════════════════════════════════════════════════════
+const _candleData={};  // code_period → [{date,open,high,low,close,volume}]
+const _candlePeriod={};  // code → 'D'|'W'|'M'
+
+const MA_COLORS={5:'#ffd166',20:'#ffa040',60:'#a78bfa',120:'#4af0b0'};
+const MA_PERIODS=[5,20,60,120];
+
+function _calcMA(closes, n) {
+  return closes.map((_,i)=>{
+    if(i<n-1) return null;
+    return closes.slice(i-n+1,i+1).reduce((a,b)=>a+b,0)/n;
   });
-  const lbl=isDay
-    ?'1일 선차트 &middot; <span style="color:var(--accent)">클릭 → 3개월봉</span>'
-    :'3개월 일봉 &middot; <span style="color:var(--accent)">클릭 → 1일차트</span>';
-  [`chart-lbl-${code}-a`,`chart-lbl-${code}-m`].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.innerHTML=lbl;
+}
+
+async function loadCandleData(code, period) {
+  const key=`${code}_${period}`;
+  if(_candleData[key]) return _candleData[key];
+  try {
+    const r=await fetch(`/api/ohlcv/${code}/${period}?t=${Date.now()}`,{cache:'no-store'});
+    if(!r.ok) return [];
+    const data=await r.json();
+    if(Array.isArray(data)&&data.length>0) {
+      _candleData[key]=data;
+      return data;
+    }
+  } catch(_){}
+  return [];
+}
+
+function drawCandleChart(code) {
+  const period=_candlePeriod[code]||'D';
+  const key=`${code}_${period}`;
+  const suffix=document.getElementById(`candle-${code}-a`)?'-a':'-m';
+  const canvas=document.getElementById(`candle-${code}${suffix}`);
+  const volCanvas=document.getElementById(`candle-vol-${code}${suffix}`);
+  if(!canvas) return;
+
+  const raw=_candleData[key]||[];
+  if(!raw.length) {
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#4a4f5e';
+    ctx.font='11px monospace';
+    ctx.textAlign='center';
+    ctx.fillText('데이터 없음', canvas.width/2, canvas.height/2);
+    return;
+  }
+
+  // 최신→과거 순 → 오래된순으로 반전해서 그림
+  const data=[...raw].reverse();
+  const n=data.length;
+  const DPR=window.devicePixelRatio||1;
+
+  // ── 메인 차트 ──
+  const W=canvas.clientWidth||320, H=canvas.clientHeight||160;
+  canvas.width=W*DPR; canvas.height=H*DPR;
+  const ctx=canvas.getContext('2d');
+  ctx.scale(DPR,DPR);
+
+  const PAD={l:2,r:2,t:8,b:4};
+  const cW=W-PAD.l-PAD.r, cH=H-PAD.t-PAD.b;
+  const barW=Math.max(1,Math.floor(cW/n*0.7));
+  const step=cW/n;
+
+  const closes=data.map(d=>d.close);
+  const highs=data.map(d=>d.high);
+  const lows=data.map(d=>d.low);
+  const priceMin=Math.min(...lows)*0.998;
+  const priceMax=Math.max(...highs)*1.002;
+  const priceRange=priceMax-priceMin||1;
+
+  const py=p=>PAD.t+cH*(1-(p-priceMin)/priceRange);
+  const px=i=>PAD.l+step*(i+0.5);
+
+  // 배경
+  ctx.fillStyle='#131720'; ctx.fillRect(0,0,W,H);
+
+  // 그리드 라인 (수평 4개)
+  ctx.strokeStyle='rgba(255,255,255,.05)'; ctx.lineWidth=0.5;
+  for(let g=1;g<=3;g++){
+    const y=PAD.t+cH*g/4;
+    ctx.beginPath(); ctx.moveTo(PAD.l,y); ctx.lineTo(W-PAD.r,y); ctx.stroke();
+  }
+
+  // MA 라인
+  const maData={};
+  MA_PERIODS.forEach(p=>{
+    maData[p]=_calcMA(closes,p);
   });
+  MA_PERIODS.forEach(p=>{
+    ctx.strokeStyle=MA_COLORS[p]; ctx.lineWidth=1; ctx.setLineDash([]);
+    ctx.beginPath();
+    let started=false;
+    maData[p].forEach((v,i)=>{
+      if(v===null) return;
+      const x=px(i), y=py(v);
+      if(!started){ctx.moveTo(x,y);started=true;}
+      else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  });
+
+  // 캔들 바디 + 위크
+  data.forEach((d,i)=>{
+    const isUp=d.close>=d.open;
+    const col=isUp?'#ff4d4d':'#5599ff';
+    const x=px(i);
+    const oY=py(d.open), cY=py(d.close);
+    const hY=py(d.high), lY=py(d.low);
+
+    // 위크
+    ctx.strokeStyle=col; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(x,hY); ctx.lineTo(x,lY); ctx.stroke();
+
+    // 바디
+    const bodyTop=Math.min(oY,cY), bodyH=Math.max(Math.abs(oY-cY),1);
+    ctx.fillStyle=col;
+    if(barW<=1){ ctx.fillRect(x-0.5,bodyTop,1,bodyH); }
+    else { ctx.fillRect(x-barW/2,bodyTop,barW,bodyH); }
+  });
+
+  // ── 거래량 차트 ──
+  if(volCanvas) {
+    const VW=volCanvas.clientWidth||320, VH=volCanvas.clientHeight||40;
+    volCanvas.width=VW*DPR; volCanvas.height=VH*DPR;
+    const vctx=volCanvas.getContext('2d');
+    vctx.scale(DPR,DPR);
+    vctx.fillStyle='#131720'; vctx.fillRect(0,0,VW,VH);
+
+    const vols=data.map(d=>d.volume);
+    const maxVol=Math.max(...vols,1);
+    const VPAD={l:2,r:2,t:2,b:2};
+    const vH=VH-VPAD.t-VPAD.b;
+
+    data.forEach((d,i)=>{
+      const x=PAD.l+step*(i+0.5);
+      const barH=Math.max(1,(d.volume/maxVol)*vH);
+      vctx.fillStyle='rgba(255,160,64,0.7)';
+      vctx.fillRect(x-barW/2,VH-VPAD.b-barH,barW,barH);
+    });
+  }
+}
+
+async function switchCandlePeriod(code, period) {
+  _candlePeriod[code]=period;
+  // 탭 활성화
+  ['D','W','M'].forEach(p=>{
+    ['a','m'].forEach(s=>{
+      const el=document.getElementById(`ctab-${code}-${p}-${s}`);
+      if(el) el.className='candle-tab'+(p===period?' active':'');
+    });
+  });
+  // 캔들 로딩 표시
+  ['a','m'].forEach(s=>{
+    const c=document.getElementById(`candle-${code}-${s}`);
+    if(!c) return;
+    const ctx=c.getContext('2d');
+    c.width=c.clientWidth*(window.devicePixelRatio||1);
+    c.height=c.clientHeight*(window.devicePixelRatio||1);
+    ctx.scale(window.devicePixelRatio||1,window.devicePixelRatio||1);
+    ctx.fillStyle='#131720'; ctx.fillRect(0,0,c.clientWidth,c.clientHeight);
+    ctx.fillStyle='#4a4f5e'; ctx.font='11px monospace'; ctx.textAlign='center';
+    ctx.fillText('로딩 중...', c.clientWidth/2, c.clientHeight/2);
+  });
+  await loadCandleData(code, period);
+  drawCandleChart(code);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1037,13 +1236,11 @@ function buildDetailHTML(s) {
   rangePct=Math.max(0,Math.min(100,rangePct));
 
   const naverUrl=`https://finance.naver.com/item/main.naver?code=${s.code}`;
-  const initMode=chartModes[s.code]||'day';
-  const initSrc=initMode==='day'
-    ?`https://ssl.pstatic.net/imgfinance/chart/item/area/day/${s.code}.png`
-    :`https://ssl.pstatic.net/imgfinance/chart/item/area/month3/${s.code}.png`;
-  const initLbl=initMode==='day'
-    ?'1일 선차트 &middot; <span style="color:var(--accent)">클릭 → 3개월봉</span>'
-    :'3개월 일봉 &middot; <span style="color:var(--accent)">클릭 → 1일차트</span>';
+  const initPeriod=_candlePeriod[s.code]||'D';
+
+  const maLegend=Object.entries(MA_COLORS).map(([p,c])=>
+    `<span style="font-family:var(--mono);font-size:9px;color:${c};white-space:nowrap"><span class="candle-ma-dot" style="background:${c}"></span>MA${p}</span>`
+  ).join('');
 
   return`
     <div class="d-hero">
@@ -1063,13 +1260,16 @@ function buildDetailHTML(s) {
       <div class="d-cap">시총 ${fmtCap(s.market_cap)} &middot; 외인 ${s.foreign_own?s.foreign_own.toFixed(1)+'%':'-'} &middot; ${chgStr}</div>
     </div>
 
-    <div class="naver-chart-wrap">
-      <div onclick="toggleChart('${s.code}')" style="cursor:pointer;">
-        <img id="chart-img-${s.code}-a" src="${initSrc}" alt="${initMode==='day'?'1일 선차트':'3개월 일봉'}" class="naver-chart-img"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="chart-err-msg" style="display:none">차트를 불러올 수 없습니다</div>
+    <div class="candle-chart-wrap">
+      <div class="candle-period-tabs">
+        <button id="ctab-${s.code}-D-a" class="candle-tab${initPeriod==='D'?' active':''}" onclick="switchCandlePeriod('${s.code}','D')">일봉</button>
+        <button id="ctab-${s.code}-W-a" class="candle-tab${initPeriod==='W'?' active':''}" onclick="switchCandlePeriod('${s.code}','W')">주봉</button>
+        <button id="ctab-${s.code}-M-a" class="candle-tab${initPeriod==='M'?' active':''}" onclick="switchCandlePeriod('${s.code}','M')">월봉</button>
+        <div style="flex:1"></div>
+        <div class="candle-ma-legend" style="padding:4px 8px;gap:8px">${maLegend}</div>
       </div>
-      <div class="chart-overlay-lbl" id="chart-lbl-${s.code}-a">${initLbl}</div>
+      <div class="candle-canvas-wrap"><canvas id="candle-${s.code}-a" style="width:100%;height:100%"></canvas></div>
+      <div class="candle-vol-wrap"><canvas id="candle-vol-${s.code}-a" style="width:100%;height:100%"></canvas></div>
     </div>
 
     <div class="range-52w">
@@ -1157,6 +1357,12 @@ function openDetail(code) {
   if(window.innerWidth<=900) openMobDetail(html);
   else document.getElementById('detailInner').innerHTML=html;
   fetchStockPrice(code);
+  // 캔들차트 로드 (DOM 삽입 후 다음 프레임에서 그림)
+  const period=_candlePeriod[code]||'D';
+  requestAnimationFrame(async ()=>{
+    await loadCandleData(code, period);
+    drawCandleChart(code);
+  });
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1343,12 +1549,63 @@ function fgInterpret(score) {
   return          {label:'극도의 공포',    color:'#3366ff',text:`극도의 공포 구간(${score}점) — 패닉셀 발생 가능. 내재가치 대비 저평가된 우량주 선별 매수를 고려하세요.`};
 }
 
+// 인트라데이 선차트 그리기 (Canvas2D)
+function drawIndexLineChart(canvasId, data, chgPct) {
+  const canvas=document.getElementById(canvasId);
+  if(!canvas||!data||!data.length) return;
+  const DPR=window.devicePixelRatio||1;
+  const W=canvas.clientWidth||160, H=canvas.clientHeight||60;
+  canvas.width=W*DPR; canvas.height=H*DPR;
+  const ctx=canvas.getContext('2d');
+  ctx.scale(DPR,DPR);
+  ctx.fillStyle='transparent'; ctx.fillRect(0,0,W,H);
+
+  const prices=data.map(d=>d.price);
+  const minP=Math.min(...prices), maxP=Math.max(...prices);
+  const range=maxP-minP||1;
+  const PAD={l:2,r:2,t:4,b:4};
+  const cW=W-PAD.l-PAD.r, cH=H-PAD.t-PAD.b;
+
+  const col=chgPct>=0?'#ff4d4d':'#5599ff';
+  const fillCol=chgPct>=0?'rgba(255,77,77,0.12)':'rgba(85,153,255,0.12)';
+
+  const pts=data.map((d,i)=>({
+    x:PAD.l+cW*(i/(data.length-1||1)),
+    y:PAD.t+cH*(1-(d.price-minP)/range)
+  }));
+
+  // 채우기 영역
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, PAD.t+cH);
+  pts.forEach(p=>ctx.lineTo(p.x,p.y));
+  ctx.lineTo(pts[pts.length-1].x, PAD.t+cH);
+  ctx.closePath();
+  ctx.fillStyle=fillCol; ctx.fill();
+
+  // 선
+  ctx.beginPath();
+  pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+  ctx.strokeStyle=col; ctx.lineWidth=1.5; ctx.stroke();
+}
+
+async function loadIndexCharts() {
+  const [kospiData,kosdaqData]=await Promise.all([
+    fetch('/api/index-chart/KOSPI?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).catch(()=>[]),
+    fetch('/api/index-chart/KOSDAQ?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).catch(()=>[]),
+  ]);
+  const raw=liveMarketData||D.meta.raw_market||{};
+  drawIndexLineChart('kospiLineChart', kospiData, Number(raw.kospi_chg||0));
+  drawIndexLineChart('kosdaqLineChart', kosdaqData, Number(raw.kosdaq_chg||0));
+}
+
 function initMarket() {
   const raw=liveMarketData||D.meta.raw_market||D.ctx.raw_data||{};
   const meta=D.meta, ctx=D.ctx;
 
   // 1) KPI (실시간 10초 폴링)
   refreshMarketKPI(raw);
+  // 인트라데이 차트 로드
+  requestAnimationFrame(loadIndexCharts);
 
   // 2) AI 기준 날짜 표시
   const aiDate=ctx.date||meta.date||'';
@@ -1440,7 +1697,7 @@ function initSector() {
     const sc=scoreColor(s.avgScore);
     const mc=s.momentum>=0?'var(--success)':'var(--danger)';
     const mPct=Math.abs(s.momentum)/maxAbs*45;
-    return`<div class="sector-bar-row">
+    return`<div class="sector-bar-row" style="min-width:480px">
       <div class="sector-name-col">${s.name}</div>
       <div style="min-width:140px;display:flex;align-items:center;gap:5px">
         <span style="font-family:var(--mono);font-size:9px;color:var(--text3)">모멘텀</span>
@@ -1471,10 +1728,13 @@ function initSector() {
     }).join('');
     return`<div style="margin-bottom:12px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden">
       <div style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text);padding:7px 12px;background:var(--bg3);border-bottom:1px solid var(--border)">${s.name}</div>
-      <table>
-        <thead><tr><th>종목명</th><th>현재가</th><th>등락</th><th>가치점수</th><th>투자의견</th></tr></thead>
-        <tbody>${rows}</tbody>
+      <div class="sector-stock-scroll">
+      <table style="table-layout:fixed;width:100%;min-width:340px">
+        <colgroup><col style="width:110px"><col style="width:80px"><col style="width:70px"><col style="width:70px"><col style="width:70px"></colgroup>
+        <thead><tr><th class="col-name">종목명</th><th>현재가</th><th>등락</th><th>가치점수</th><th>투자의견</th></tr></thead>
+        <tbody>${rows.replace(/<td class="name-cell">/g,'<td class="name-cell col-name">')}</tbody>
       </table>
+      </div>
     </div>`;
   }).join('');
 }

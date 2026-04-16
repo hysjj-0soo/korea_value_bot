@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-04-10 11:09:54",
-  "date": "2026.04.10",
+  "updated_at": "2026-04-16 09:32:50",
+  "date": "2026.04.15",
   "total_stocks": 100,
   "top10": [
     {
@@ -10,89 +10,89 @@
       "code": "403870",
       "market": "KOSDAQ",
       "sector": "IT/반도체",
-      "value_score": 69.0,
+      "value_score": 66.5,
       "signal": "hold",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.10"
+      "date": "2026.04.15"
     },
     {
       "rank": 2,
-      "prev_rank": null,
-      "name": "리노공업",
-      "code": "058470",
-      "market": "KOSDAQ",
-      "sector": "IT/반도체",
-      "value_score": 64.0,
-      "signal": "hold",
-      "rank_change": 0,
-      "rank_change_reason": "",
-      "date": "2026.04.10"
-    },
-    {
-      "rank": 3,
       "prev_rank": null,
       "name": "클래시스",
       "code": "214150",
       "market": "KOSDAQ",
       "sector": "바이오",
-      "value_score": 64.0,
+      "value_score": 64.5,
       "signal": "hold",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.10"
+      "date": "2026.04.15"
     },
     {
-      "rank": 4,
+      "rank": 3,
       "prev_rank": null,
       "name": "SK하이닉스",
       "code": "000660",
       "market": "KOSPI",
       "sector": "IT/반도체",
-      "value_score": 63.0,
+      "value_score": 63.5,
       "signal": "hold",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.10"
+      "date": "2026.04.15"
+    },
+    {
+      "rank": 4,
+      "prev_rank": null,
+      "name": "리노공업",
+      "code": "058470",
+      "market": "KOSDAQ",
+      "sector": "IT/반도체",
+      "value_score": 63.5,
+      "signal": "hold",
+      "rank_change": 0,
+      "rank_change_reason": "",
+      "date": "2026.04.15"
     },
     {
       "rank": 5,
-      "prev_rank": null,
-      "name": "한화에어로스페이스",
-      "code": "012450",
-      "market": "KOSPI",
-      "sector": "방산",
-      "value_score": 63.0,
-      "signal": "hold",
-      "rank_change": 0,
-      "rank_change_reason": "",
-      "date": "2026.04.10"
-    },
-    {
-      "rank": 6,
-      "prev_rank": null,
-      "name": "크래프톤",
-      "code": "259960",
-      "market": "KOSPI",
-      "sector": "인터넷/게임",
-      "value_score": 60.0,
-      "signal": "hold",
-      "rank_change": 0,
-      "rank_change_reason": "",
-      "date": "2026.04.10"
-    },
-    {
-      "rank": 7,
       "prev_rank": null,
       "name": "SM엔터",
       "code": "041510",
       "market": "KOSDAQ",
       "sector": "인터넷/게임",
-      "value_score": 60.0,
+      "value_score": 62.5,
       "signal": "hold",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.10"
+      "date": "2026.04.15"
+    },
+    {
+      "rank": 6,
+      "prev_rank": null,
+      "name": "휴젤",
+      "code": "145020",
+      "market": "KOSDAQ",
+      "sector": "바이오",
+      "value_score": 61.5,
+      "signal": "hold",
+      "rank_change": 0,
+      "rank_change_reason": "",
+      "date": "2026.04.15"
+    },
+    {
+      "rank": 7,
+      "prev_rank": null,
+      "name": "한화에어로스페이스",
+      "code": "012450",
+      "market": "KOSPI",
+      "sector": "방산",
+      "value_score": 61.0,
+      "signal": "hold",
+      "rank_change": 0,
+      "rank_change_reason": "",
+      "date": "2026.04.15"
     },
     {
       "rank": 8,
@@ -101,24 +101,24 @@
       "code": "000270",
       "market": "KOSPI",
       "sector": "자동차",
-      "value_score": 59.0,
+      "value_score": 59.5,
       "signal": "watch",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.10"
+      "date": "2026.04.15"
     },
     {
       "rank": 9,
       "prev_rank": null,
-      "name": "휴젤",
-      "code": "145020",
-      "market": "KOSDAQ",
-      "sector": "바이오",
+      "name": "크래프톤",
+      "code": "259960",
+      "market": "KOSPI",
+      "sector": "인터넷/게임",
       "value_score": 59.0,
       "signal": "watch",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.10"
+      "date": "2026.04.15"
     },
     {
       "rank": 10,
@@ -131,29 +131,29 @@
       "signal": "watch",
       "rank_change": 0,
       "rank_change_reason": "",
-      "date": "2026.04.10"
+      "date": "2026.04.15"
     }
   ],
   "market_sentiment": "긍정",
   "fear_greed_score": 62,
-  "market_summary": "휴전 안도감+공급계약 호재로 코스피 1%대 반등, 외국인·기관 관망세 지속",
+  "market_summary": "美 증시 훈풍에 코스피 6150선 안착, 반도체 숨고르기·현대차 강세 주목",
   "raw_market": {
-    "kospi_close": 5897.84,
-    "kospi_chg": 2.07,
-    "kosdaq_close": 1090.82,
-    "kosdaq_chg": 1.38,
-    "fx_rate": 1479.9,
+    "kospi_close": 6153.35,
+    "kospi_chg": 1.02,
+    "kosdaq_close": 1160.48,
+    "kosdaq_chg": 0.7,
+    "fx_rate": 1475.3,
     "foreign_net": 0,
     "inst_net": 0
   },
   "sector_momentum": {
-    "IT/반도체": 45,
-    "자동차": 38,
-    "금융": 20,
+    "IT/반도체": 25,
+    "자동차": 55,
+    "금융": 30,
     "바이오": 10,
-    "2차전지": 25,
-    "조선": 15,
-    "방산": 30,
-    "화학": 5
+    "2차전지": 15,
+    "조선": 35,
+    "방산": 40,
+    "화학": 10
   }
 }

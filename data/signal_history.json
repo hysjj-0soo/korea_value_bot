@@ -87,6 +87,13 @@
       "new_signal": "hold",
       "reason": "BUY 편입 종목 HOLD 유지 (가치점수 50점, EXIT 미충족)",
       "value_score": 50.0
+    },
+    {
+      "date": "2026.04.15",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 48점 (60점 미만 관망)",
+      "value_score": 48.0
     }
   ],
   "000810": [
@@ -132,6 +139,13 @@
       "new_signal": "watch",
       "reason": "가치점수 59점 (60점 미만 관망)",
       "value_score": 59.0
+    },
+    {
+      "date": "2026.04.15",
+      "old_signal": "watch",
+      "new_signal": "hold",
+      "reason": "가치점수 62점 (60~74점 HOLD 구간)",
+      "value_score": 61.5
     }
   ],
   "079550": [
@@ -222,6 +236,13 @@
       "new_signal": "hold",
       "reason": "BUY 편입 종목 HOLD 유지 (가치점수 46점, EXIT 미충족)",
       "value_score": 46.0
+    },
+    {
+      "date": "2026.04.15",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 47점 (60점 미만 관망)",
+      "value_score": 47.0
     }
   ],
   "032640": [
@@ -240,6 +261,13 @@
       "new_signal": "hold",
       "reason": "BUY 편입 종목 HOLD 유지 (가치점수 48점, EXIT 미충족)",
       "value_score": 48.0
+    },
+    {
+      "date": "2026.04.15",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 49점 (60점 미만 관망)",
+      "value_score": 49.0
     }
   ],
   "005490": [
@@ -285,6 +313,13 @@
       "new_signal": "hold",
       "reason": "가치점수 60점 (60~74점 HOLD 구간)",
       "value_score": 60.0
+    },
+    {
+      "date": "2026.04.15",
+      "old_signal": "hold",
+      "new_signal": "watch",
+      "reason": "가치점수 59점 (60점 미만 관망)",
+      "value_score": 59.0
     }
   ],
   "251270": [

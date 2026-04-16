@@ -3,85 +3,78 @@
   "fear_greed_score": 62,
   "key_issues": [
     {
-      "issue": "휴전 지속 안도감에 따른 지수 상승",
-      "impact": "긍정",
-      "sectors_affected": [
-        "전체시장",
-        "방산"
-      ],
-      "duration": "단기"
-    },
-    {
-      "issue": "현대차 아이오닉 중국 시장 첫 진출",
-      "impact": "긍정",
-      "sectors_affected": [
-        "자동차",
-        "2차전지"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "테슬라 저가 SUV 개발 검토",
-      "impact": "부정",
-      "sectors_affected": [
-        "자동차",
-        "2차전지"
-      ],
-      "duration": "중기"
-    },
-    {
-      "issue": "쓰리에이로직스·디바이스 공급계약 체결",
+      "issue": "미 S&P500 7000선 돌파 및 글로벌 증시 훈풍",
       "impact": "긍정",
       "sectors_affected": [
         "IT/반도체",
-        "전자부품"
-      ],
-      "duration": "단기"
-    },
-    {
-      "issue": "한국정보인증 자사주 취득 신탁계약",
-      "impact": "긍정",
-      "sectors_affected": [
-        "IT/반도체",
+        "자동차",
         "금융"
       ],
+      "duration": "중기"
+    },
+    {
+      "issue": "반도체 숨고르기 및 광통신주 차익실현 매물",
+      "impact": "부정",
+      "sectors_affected": [
+        "IT/반도체",
+        "통신장비"
+      ],
       "duration": "단기"
     },
     {
-      "issue": "백악관 예측 시장 베팅 경고",
+      "issue": "현대차 밸류에이션 재평가 기대감",
+      "impact": "긍정",
+      "sectors_affected": [
+        "자동차"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "AI 사이버보안 우려 부각 (미토스 이슈)",
+      "impact": "긍정",
+      "sectors_affected": [
+        "보안/SW"
+      ],
+      "duration": "단기"
+    },
+    {
+      "issue": "한성크린텍 초순수 국책과제 선정",
+      "impact": "긍정",
+      "sectors_affected": [
+        "IT/반도체",
+        "소재"
+      ],
+      "duration": "중기"
+    },
+    {
+      "issue": "고환율 지속 (USD/KRW 1475)",
       "impact": "중립",
       "sectors_affected": [
-        "금융"
-      ],
-      "duration": "단기"
-    },
-    {
-      "issue": "사모펀드 포괄적 주식교환→상폐 판결",
-      "impact": "부정",
-      "sectors_affected": [
-        "금융"
+        "자동차",
+        "조선",
+        "화학"
       ],
       "duration": "중기"
     }
   ],
   "sector_momentum": {
-    "IT/반도체": 45,
-    "자동차": 38,
-    "금융": 20,
+    "IT/반도체": 25,
+    "자동차": 55,
+    "금융": 30,
     "바이오": 10,
-    "2차전지": 25,
-    "조선": 15,
-    "방산": 30,
-    "화학": 5
+    "2차전지": 15,
+    "조선": 35,
+    "방산": 40,
+    "화학": 10
   },
-  "market_summary": "휴전 안도감+공급계약 호재로 코스피 1%대 반등, 외국인·기관 관망세 지속",
-  "date": "2026.04.10",
+  "market_summary": "美 증시 훈풍에 코스피 6150선 안착, 반도체 숨고르기·현대차 강세 주목",
+  "date": "2026.04.16",
   "raw_data": {
-    "kospi_close": 5897.84,
-    "kospi_chg": 2.07,
-    "kosdaq_close": 1090.82,
-    "kosdaq_chg": 1.38,
-    "fx_rate": 1479.9,
+    "kospi_close": 6153.35,
+    "kospi_chg": 1.02,
+    "kosdaq_close": 1160.48,
+    "kosdaq_chg": 0.7,
+    "fx_rate": 1475.3,
     "foreign_net": 0,
     "inst_net": 0
   }
